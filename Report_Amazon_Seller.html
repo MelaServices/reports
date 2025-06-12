@@ -2861,11 +2861,19 @@
                         chart.options.plugins.title.padding = { bottom: responsivePadding + 5 };
                     }
                     
-                    // Aggiorna tooltip per mobile
+                    // Aggiorna tooltip per mobile e tema
                     if (chart.options.plugins && chart.options.plugins.tooltip) {
-                        chart.options.plugins.tooltip.titleFont = { size: responsiveFontSize };
+                        chart.options.plugins.tooltip.titleFont = { size: responsiveFontSize, weight: 'bold' };
                         chart.options.plugins.tooltip.bodyFont = { size: responsiveFontSize - 1 };
                         chart.options.plugins.tooltip.padding = responsivePadding;
+                        chart.options.plugins.tooltip.backgroundColor = tooltipBg;
+                        chart.options.plugins.tooltip.titleColor = textColor;
+                        chart.options.plugins.tooltip.bodyColor = textColor;
+                        chart.options.plugins.tooltip.borderColor = tooltipBorder;
+                        chart.options.plugins.tooltip.borderWidth = 1;
+                        chart.options.plugins.tooltip.cornerRadius = 8;
+                        chart.options.plugins.tooltip.displayColors = true;
+                        chart.options.plugins.tooltip.boxShadow = isDark ? '0 10px 25px rgba(0, 0, 0, 0.5)' : '0 5px 15px rgba(0, 0, 0, 0.1)';
                     }
                     
                     // Aggiorna il grafico
