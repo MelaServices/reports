@@ -1,0 +1,3370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Vendite</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --dark-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
+            --info-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
+            color: #2d3748;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1400px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        h2 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            letter-spacing: -2px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            position: relative;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+        
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .card-body {
+            padding: 2rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .grafico-centrato {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .metric-card {
+            padding: 2rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: none;
+            transition: var(--transition);
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 0.8;
+            z-index: -1;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        .metric-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .total-sales { 
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .total-sales .metric-value,
+        .total-sales .metric-label {
+            color: white;
+        }
+        
+        .avg-sales { 
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .avg-sales .metric-value,
+        .avg-sales .metric-label {
+            color: white;
+        }
+        
+        .best-sales { 
+            background: var(--warning-gradient);
+            color: white;
+        }
+        
+        .best-sales .metric-value,
+        .best-sales .metric-label {
+            color: white;
+        }
+        
+        .btn {
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 0.75rem 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            color: #2d3748;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            color: #4a5568;
+            font-weight: 700;
+            border: none;
+            padding: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+        
+        .table td {
+            border: none;
+            color: #2d3748;
+            font-weight: 500;
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.01);
+        }
+        
+        .table-responsive {
+            border-radius: 15px;
+        }
+        
+        .card h5 {
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .card h5::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+        
+        .card {
+            margin-bottom: 2rem;
+        }
+        
+        .row {
+            margin-bottom: 0;
+        }
+        .sticky-filter {
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 20px; /* Adjust this value if you have a fixed navbar or want different spacing */
+            height: calc(100vh - 68px); /* Full viewport height minus top offset and some bottom space */
+            display: flex;
+            flex-direction: column;
+        }
+        .heatmap-table-container {
+            width: 100%;
+            overflow-x: auto; /* Allows horizontal scrolling if table is too wide */
+        }
+        .heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            table-layout: fixed; /* Distribute column widths evenly */
+        }
+        .heatmap-table th, .heatmap-table td {
+            border: 1px solid #fff; /* White borders like example */
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 10px; /* Start with a readable size, can be adjusted */
+            min-width: 70px; /* Minimum width for cells */
+        }
+        .heatmap-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .heatmap-table th.month-header { /* Style for clickable month headers */
+            cursor: pointer;
+        }
+        .heatmap-table th.month-header:hover {
+            background-color: #e9ecef; /* Slight hover effect */
+        }
+        .heatmap-table td {
+            color: black; /* Black text for numbers */
+        }
+        .heatmap-legend {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .legend-color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 991px) {
+            .card-body {
+                padding: 1.2rem 1rem;
+            }
+            .metric-card {
+                padding: 18px 10px 12px 10px;
+            }
+        }
+        /* Ensure the card-body within the sticky filter can grow and scroll */
+        .sticky-filter > .card-body {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .chart-card-full-height,
+        .chart-card-full-height .card-body {
+            max-height: none !important;
+            overflow-y: visible !important;
+        }
+        .chart-aspect-ratio-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px; /* Max width for the chart */
+            margin-left: auto;  /* Center the wrapper */
+            margin-right: auto; /* Center the wrapper */
+            padding-top: 55%; /* Adjusted aspect ratio for more height (e.g., ~16:9) */
+            flex-shrink: 0; /* Prevent shrinking if it's a flex item in card-body */
+        }
+        .chart-aspect-ratio-wrapper canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .card {
+            background: rgba(45, 55, 72, 0.95);
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .main-header {
+            background: rgba(45, 55, 72, 0.95);
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .table {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .table th {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .form-control {
+            background: rgba(45, 55, 72, 0.8);
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .form-control:focus {
+            background: #2d3748;
+            border-color: #667eea;
+            color: #e2e8f0;
+        }
+        
+        /* Progress Bar Animation */
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-animated {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+            animation: progressLoad 2s ease-in-out;
+        }
+        
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        /* Enhanced Badges */
+        .badge {
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .toast {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            color: white;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Enhanced Metric Cards */
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+        
+        .metric-card:hover::after {
+            transform: scale(1);
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: var(--card-shadow-hover);
+        }
+        
+        /* Enhanced Filter Headers */
+        .filter-header {
+            transition: var(--transition);
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+        
+        .filter-header:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .kpi-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .kpi-content h3 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .kpi-content p {
+            font-size: 0.9rem;
+            margin: 5px 0 0 0;
+            color: var(--text-muted);
+        }
+
+        [data-theme="dark"] .kpi-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Stili per intestazioni tabelle cliccabili */
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 20px !important;
+            transition: background-color 0.2s ease;
+        }
+
+        .sortable-header:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .sortable-header::after {
+            content: '\2195';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        .sortable-header.sorted-asc::after {
+            content: '\2191';
+            opacity: 1;
+            color: #007bff;
+        }
+
+        .sortable-header.sorted-desc::after {
+            content: '\2193';
+            opacity: 1;
+            color: #007bff;
+        }
+
+        [data-theme="dark"] .sortable-header:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="main-header">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="theme-toggle">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleTheme()" id="themeToggle">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </div>
+                <div class="header-stats">
+                    <span class="badge bg-success me-2"><i class="fas fa-database me-1"></i>Online</span>
+                    <span class="badge bg-info"><i class="fas fa-clock me-1"></i>Aggiornato ora</span>
+                </div>
+            </div>
+            <h2><i class="fas fa-chart-line me-3"></i>Dashboard Vendite</h2>
+            <p class="subtitle">Analisi avanzata delle vendite mensili con filtri intelligenti</p>
+            <div class="progress-bar-container mt-3">
+                <div class="progress-bar-animated"></div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5><i class="fas fa-upload me-2"></i>Carica il tuo file Excel</h5>
+                        <div class="row align-items-end">
+                            <div class="col-md-8">
+                                <input type="file" class="form-control" id="fileInput" accept=".xlsx, .xls, .csv">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-primary w-100" onclick="exportToPDF()">
+                                    <i class="fas fa-file-pdf me-2"></i>Esporta in PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card sticky-filter">
+                    <div class="card-body">
+                        <h5><i class="fas fa-filter me-2"></i>Filtri Avanzati</h5>
+
+                        <!-- Date Filter (Open by default) -->
+                        <div class="filter-group mt-3">
+                            <h6 class="filter-header" data-bs-toggle="collapse" data-bs-target="#collapseDateFilter" aria-expanded="true" aria-controls="collapseDateFilter" style="cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-calendar-alt me-2"></i>Filtro Data
+                            </h6>
+                            <div id="collapseDateFilter" class="collapse show">
+                                <div class="filter-content pt-2">
+                                    <div class="mb-2">
+                                        <label for="dataInizio" class="form-label">Data Inizio</label>
+                                        <input type="date" class="form-control" id="dataInizio" onchange="aggiornaSelezionePeriodo()">
+                                    </div>
+                                    <div>
+                                        <label for="dataFine" class="form-label">Data Fine</label>
+                                        <input type="date" class="form-control" id="dataFine" onchange="aggiornaSelezionePeriodo()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Canali Filter (Closed by default) -->
+                        <div class="filter-group mt-3">
+                            <h6 class="filter-header" data-bs-toggle="collapse" data-bs-target="#collapseCanaliFilter" aria-expanded="false" aria-controls="collapseCanaliFilter" style="cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-store me-2"></i>Filtro Canali di Vendita
+                            </h6>
+                            <div id="collapseCanaliFilter" class="collapse">
+                                <div class="filter-content pt-2">
+                                    <button class="btn btn-primary mb-2 w-100" onclick="selezionaTuttiCanali()">
+                                        <i class="fas fa-check-circle me-2"></i>Seleziona Tutti Canali
+                                    </button>
+                                    <button class="btn btn-secondary mb-2 w-100" onclick="deselezionaTuttiCanali()">
+                                        <i class="fas fa-times-circle me-2"></i>Deseleziona Tutti Canali
+                                    </button>
+                                    <div id="filtroCanali" class="mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SKU Filter (Closed by default) -->
+                        <div class="filter-group mt-3">
+                            <h6 class="filter-header" data-bs-toggle="collapse" data-bs-target="#collapseSkuFilter" aria-expanded="false" aria-controls="collapseSkuFilter" style="cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-barcode me-2"></i>Filtro SKU
+                            </h6>
+                            <div id="collapseSkuFilter" class="collapse">
+                                <div class="filter-content pt-2">
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                        <input type="text" class="form-control" id="searchSkuInput" placeholder="Cerca SKU..." oninput="handleSkuSearch()">
+                                    </div>
+                                    <button class="btn btn-primary mb-2 w-100" onclick="selezionaTuttiFiltro('sku')">
+                                        <i class="fas fa-check-circle me-2"></i>Seleziona Tutti SKU
+                                    </button>
+                                    <button class="btn btn-secondary mb-2 w-100" onclick="deselezionaTuttiFiltro('sku')">
+                                        <i class="fas fa-times-circle me-2"></i>Deseleziona Tutti SKU
+                                    </button>
+                                    <div id="filtroSKU" class="mt-1" style="max-height: 320px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stati Ordine Filter (Closed by default) -->
+                        <div class="filter-group mt-3">
+                            <h6 class="filter-header" data-bs-toggle="collapse" data-bs-target="#collapseStatiFilter" aria-expanded="false" aria-controls="collapseStatiFilter" style="cursor: pointer; font-weight: bold;">
+                                <i class="fas fa-clipboard-list me-2"></i>Filtro Stati Ordine
+                            </h6>
+                            <div id="collapseStatiFilter" class="collapse">
+                                <div class="filter-content pt-2">
+                                    <button class="btn btn-primary mb-2 w-100" onclick="selezionaTuttiFiltro('stati')">
+                                        <i class="fas fa-check-circle me-2"></i>Seleziona Tutti Stati
+                                    </button>
+                                    <button class="btn btn-secondary mb-2 w-100" onclick="deselezionaTuttiFiltro('stati')">
+                                        <i class="fas fa-times-circle me-2"></i>Deseleziona Tutti Stati
+                                    </button>
+                                    <div id="filtroStati" class="mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="metric-card total-sales h-100">
+                            <div class="metric-icon">
+                                <i class="fas fa-euro-sign"></i>
+                            </div>
+                            <div class="metric-value" id="totaleVendite">€0.00</div>
+                            <div class="metric-label">Totale Vendite</div>
+                            <div class="metric-value mt-2" id="unitaVendute">0</div>
+                            <div class="metric-label">Unità Vendute</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-card avg-sales h-100">
+                            <div class="metric-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="metric-value" id="numeroOrdini">0</div>
+                            <div class="metric-label">Numero Ordini</div>
+                            <div class="metric-value mt-2" id="valoreMedioOrdine">€0.00</div>
+                            <div class="metric-label">Valore Medio Ordine</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="metric-card best-sales h-100">
+                            <div class="metric-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="metric-value" id="mediaVenditeMensili">€0.00</div>
+                            <div class="metric-label">Media Vendite Mensili</div>
+                            <div class="metric-value mt-2" id="prodottiUnici">0</div>
+                            <div class="metric-label">Prodotti Unici</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nuovi Grafici Basati sui Dati CSV -->
+
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fab fa-amazon me-2"></i>Distribuzione Canali Amazon</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="amazonChannelsChart" style="cursor: pointer;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-clipboard-check me-2"></i>Stato degli Ordini</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="orderStatusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4" id="salesChannelAnalysisContainer" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="text-center mb-0"><i class="fas fa-chart-pie me-2"></i>Analisi Canali di Vendita</h5>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="hideSalesChannelAnalysis()">
+                                        <i class="fas fa-times"></i> Chiudi
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table" id="tabellaCanali">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable-header" data-column="0" data-type="text">Canale</th>
+                                                <th class="sortable-header" data-column="1" data-type="number">Vendite (€)</th>
+                                                <th class="sortable-header" data-column="2" data-type="number">Percentuale</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-trophy me-2"></i>Top 10 SKU per Vendite</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="top10SkuChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-calendar-day me-2"></i>Trend Vendite Giornaliere</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="dailySalesTrendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-chart-bar me-2"></i>Vendite per Giorno della Settimana</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="weeklyBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grafico Vendite per Fascia Oraria -->
+                <div class="row mt-4" id="hourlyChartContainer" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="text-center mb-0"><i class="fas fa-clock me-2"></i>Vendite per Fascia Oraria - <span id="selectedDayTitle"></span></h5>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="hideHourlyChart()">
+                                        <i class="fas fa-times"></i> Chiudi
+                                    </button>
+                                </div>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="hourlyBarChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-chart-bar me-2"></i>Grafico a Barre - Vendite per Mese</h5>
+                                <div class="chart-aspect-ratio-wrapper">
+                                    <canvas id="graficoBarreMese"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body" style="max-height: 350px; overflow-y: auto;">
+                                <h5 class="text-center"><i class="fas fa-euro-sign me-2"></i>Valore Medio Ordine (AOV) per Canale</h5>
+                                <div class="table-responsive">
+                                    <table class="table" id="tabellaAOV">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable-header" data-column="0" data-type="text">Canale</th>
+                                                <th class="sortable-header" data-column="1" data-type="number">Valore Medio Ordine (€)</th>
+                                                <th class="sortable-header" data-column="2" data-type="number">Numero Ordini</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center"><i class="fas fa-fire me-2"></i>Heatmap - Top 10 Sellers per Month</h5>
+                                <div id="heatmapContainer" class="heatmap-table-container" style="height: 400px; overflow-y: auto;">
+                                   <!-- HTML Table will be injected here -->
+                                </div>
+                                <div id="heatmapLegend" class="heatmap-legend"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="text-center" style="cursor: pointer;" onclick="toggleProvinceChart()"><i class="fas fa-chart-bar me-2"></i>Analisi Geografica Dettagliata <small class="text-muted">(Clicca per Provincia)</small></h5>
+                                <div class="table-responsive" id="geographicalTableContainer" style="display: none;">
+                                    <table class="table table-striped" id="geographicalTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable-header" data-column="0" data-type="text">Paese</th>
+                                                <th class="sortable-header" data-column="1" data-type="text">Regione</th>
+                                                <th class="sortable-header" data-column="2" data-type="text">Città</th>
+                                                <th class="sortable-header" data-column="3" data-type="number">Ordini</th>
+                                                <th class="sortable-header" data-column="4" data-type="number">Vendite Totali</th>
+                                                <th class="sortable-header" data-column="5" data-type="number">AOV</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div id="provinceChartContainer" style="display: block;">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Grafico Province</h6>
+                                        <div>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="showCityChart()" id="showCityBtn" style="display: none;">
+                                                <i class="fas fa-city"></i> Mostra Città
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="hideProvinceChart()">
+                                                <i class="fas fa-times"></i> Chiudi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="position: relative; height: 500px; width: 100%;">
+                                        <canvas id="provinceChart" style="border: 1px solid #ddd; border-radius: 8px;"></canvas>
+                                    </div>
+                                </div>
+                                <div id="cityChartContainer" style="display: none;">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0"><i class="fas fa-city me-2"></i>Grafico Città - <span id="selectedProvinceName"></span></h6>
+                                        <div>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="backToProvinceChart()">
+                                                <i class="fas fa-arrow-left"></i> Torna alle Province
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="hideCityChart()">
+                                                <i class="fas fa-times"></i> Chiudi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="position: relative; height: 500px; width: 100%;">
+                                        <canvas id="cityChart" style="border: 1px solid #ddd; border-radius: 8px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Keep for other charts -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- REMOVE chartjs-chart-matrix and chartjs-plugin-datalabels if no other chart uses them,
+         but they are small and might be used by other parts of your dashboard.
+         For now, I'll leave them in case other charts depend on them.
+         If this heatmap was the *only* user of chartjs-plugin-datalabels,
+         the Chart.unregister(ChartDataLabels) call would also be needed.
+    -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.1.1/dist/chartjs-chart-matrix.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script> -->
+    <script>
+        // Chart.register(ChartDataLabels); // Only if other charts use it. For now, assume they might.
+        
+        // Removed the old heatmapChart variable and Chart.js based drawHeatmap function.
+        // New HTML table based drawHeatmap function:
+        function drawHeatmap(heatmapInputData) {
+            console.log("Drawing HTML table heatmap. Input data:", heatmapInputData);
+            const container = document.getElementById('heatmapContainer');
+            const legendContainer = document.getElementById('heatmapLegend');
+            if (!container) {
+                console.error("Heatmap container not found!");
+                return;
+            }
+            container.innerHTML = ''; // Clear previous table
+            legendContainer.innerHTML = ''; // Clear previous legend
+
+            if (!heatmapInputData || heatmapInputData.length === 0) {
+                container.innerHTML = '<p class="text-center text-muted">Nessun dato disponibile per la heatmap.</p>';
+                return;
+            }
+
+            const months = new Set();
+            const skuDataMap = new Map(); // SKU -> { month: value, ... }
+
+            heatmapInputData.forEach(row => {
+                const sku = row.sku;
+                const currentSkuData = skuDataMap.get(sku) || {};
+                Object.keys(row).forEach(key => {
+                    if (key !== 'sku') {
+                        months.add(key);
+                        currentSkuData[key] = row[key];
+                    }
+                });
+                skuDataMap.set(sku, currentSkuData);
+            });
+
+            const sortedMonths = Array.from(months).sort();
+            const skus = Array.from(skuDataMap.keys()); // SKUs are already sorted from elaboraDati
+
+            // Calculate average for each SKU
+            const skuStats = {};
+            // Use heatmapInputData directly to preserve original object references for sorting
+            heatmapInputData.forEach(item => {
+                const sku = item.sku;
+                const monthlyValues = [];
+                sortedMonths.forEach(month => {
+                    const value = item[month];
+                     if (typeof value === 'number') {
+                        monthlyValues.push(value);
+                    }
+                });
+                if (monthlyValues.length > 0) {
+                    const sum = monthlyValues.reduce((a, b) => a + b, 0);
+                    const avg = sum / monthlyValues.length; // Corrected: was values.length
+                    const maxDev = monthlyValues.length > 0 ? Math.max(...monthlyValues.map(v => Math.abs(v - avg))) : 1;
+                    skuStats[sku] = { average: avg, maxDeviation: maxDev > 0 ? maxDev : 1 };
+                } else {
+                    skuStats[sku] = { average: 0, maxDeviation: 1 };
+                }
+            });
+
+
+            const colorRed = { r: 215, g: 25, b: 28 };
+            const colorYellow = { r: 255, g: 255, b: 191 };
+            const colorGreen = { r: 26, g: 150, b: 65 };
+
+            // Helper function to calculate deviation for sorting
+            function getClampedDeviation(value, stats) {
+                if (typeof value !== 'number' || !stats) return -Infinity; // Treat non-numbers/missing stats as "lowest" for color sorting
+                const deviation = value - stats.average;
+                const normalizedDeviation = stats.maxDeviation === 0 ? 0 : deviation / stats.maxDeviation;
+                return Math.max(-1, Math.min(1, normalizedDeviation));
+            }
+
+            // Function to render the table body based on sorted SKU data
+            function renderTableBody(currentSkusData, tbodyElement) {
+                tbodyElement.innerHTML = ''; // Clear existing rows
+                currentSkusData.forEach(item => {
+                    const sku = item.sku;
+                    const tr = tbodyElement.insertRow();
+                    const tdSku = tr.insertCell();
+                    tdSku.textContent = sku;
+                    tdSku.style.textAlign = 'left';
+
+                    sortedMonths.forEach(month => {
+                        const td = tr.insertCell();
+                        const value = item[month];
+
+                        if (typeof value === 'number') {
+                            td.textContent = value.toFixed(2);
+                            if (value === 0) {
+                                td.style.backgroundColor = '#FFFFFF'; // White background for zero values
+                            } else {
+                                const stats = skuStats[sku];
+                                if (stats) { // Ensure stats exist for the SKU
+                                    const deviation = value - stats.average;
+                                    const normalizedDeviation = stats.maxDeviation === 0 ? 0 : deviation / stats.maxDeviation;
+                                    const clampedDeviation = Math.max(-1, Math.min(1, normalizedDeviation));
+                                    let r, g, b;
+                                    if (clampedDeviation < 0) {
+                                        const t = 1 + clampedDeviation;
+                                        r = Math.round(colorRed.r * (1 - t) + colorYellow.r * t);
+                                        g = Math.round(colorRed.g * (1 - t) + colorYellow.g * t);
+                                        b = Math.round(colorRed.b * (1 - t) + colorYellow.b * t);
+                                    } else {
+                                        const t = clampedDeviation;
+                                        r = Math.round(colorYellow.r * (1 - t) + colorGreen.r * t);
+                                        g = Math.round(colorYellow.g * (1 - t) + colorGreen.g * t);
+                                        b = Math.round(colorYellow.b * (1 - t) + colorGreen.b * t);
+                                    }
+                                    td.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+                                } else {
+                                    td.style.backgroundColor = 'rgba(230, 230, 230, 0.8)'; // Default for safety
+                                }
+                            }
+                        } else {
+                            td.textContent = '-';
+                            td.style.backgroundColor = 'rgba(230, 230, 230, 0.8)';
+                        }
+                    });
+                });
+            }
+
+            const table = document.createElement('table');
+            table.className = 'heatmap-table';
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+            const thSku = document.createElement('th');
+            thSku.textContent = 'Prodotto (SKU)';
+            headerRow.appendChild(thSku);
+
+            // To store sort state for each month: { month: { type: 'sales' | 'color', direction: 'desc' | 'asc' }}
+            const monthSortStates = {};
+
+            sortedMonths.forEach(month => {
+                monthSortStates[month] = { type: 'sales', direction: 'desc' }; // Initial sort state
+
+                const th = document.createElement('th');
+                th.textContent = month;
+                th.classList.add('month-header');
+                th.dataset.month = month;
+                th.title = `Clicca per ordinare per ${month}`;
+
+                th.onclick = function() {
+                    const selectedMonth = this.dataset.month;
+                    let currentState = monthSortStates[selectedMonth];
+                    let nextSortType = currentState.type;
+                    let nextSortDirection = currentState.direction;
+
+                    // Cycle through sort states
+                    if (currentState.type === 'sales' && currentState.direction === 'desc') {
+                        nextSortType = 'color';
+                        nextSortDirection = 'desc'; // Green to Red (higher deviation to lower)
+                        this.title = `Ordinato per colore (verde > rosso) per ${month}. Clicca per invertire.`;
+                    } else if (currentState.type === 'color' && currentState.direction === 'desc') {
+                        nextSortType = 'color';
+                        nextSortDirection = 'asc';  // Red to Green (lower deviation to higher)
+                        this.title = `Ordinato per colore (rosso > verde) per ${month}. Clicca per ordinare per vendite.`;
+                    } else if (currentState.type === 'color' && currentState.direction === 'asc') {
+                        nextSortType = 'sales';
+                        nextSortDirection = 'desc'; // Back to sales descending
+                        this.title = `Ordinato per vendite (decrescente) per ${month}. Clicca per ordinare per colore.`;
+                    }
+                    
+                    monthSortStates[selectedMonth] = { type: nextSortType, direction: nextSortDirection };
+
+                    // Reset titles for other headers
+                    headerRow.querySelectorAll('.month-header').forEach(header_th => {
+                        if (header_th !== this) {
+                            const otherMonth = header_th.dataset.month;
+                            monthSortStates[otherMonth] = { type: 'sales', direction: 'desc' }; // Reset others to default
+                            header_th.title = `Clicca per ordinare per ${otherMonth}`;
+                        }
+                    });
+
+
+                    const sortedData = [...heatmapInputData].sort((a, b) => {
+                        if (nextSortType === 'sales') {
+                            const valA = typeof a[selectedMonth] === 'number' ? a[selectedMonth] : -Infinity;
+                            const valB = typeof b[selectedMonth] === 'number' ? b[selectedMonth] : -Infinity;
+                            return nextSortDirection === 'desc' ? valB - valA : valA - valB; // Only desc for sales for now
+                        } else { // color sort
+                            const statsA = skuStats[a.sku];
+                            const statsB = skuStats[b.sku];
+                            const deviationA = getClampedDeviation(a[selectedMonth], statsA);
+                            const deviationB = getClampedDeviation(b[selectedMonth], statsB);
+
+                            return nextSortDirection === 'desc' ? deviationB - deviationA : deviationA - deviationB;
+                        }
+                    });
+                    renderTableBody(sortedData, tbody);
+                };
+                headerRow.appendChild(th);
+            });
+
+            const tbody = table.createTBody();
+            // Initial render with original (top 10 overall) sort order
+            // To ensure initial render is consistent with a potential "sales, desc" sort on the first month if clicked
+            const initialSortMonth = sortedMonths.length > 0 ? sortedMonths[0] : null;
+            if (initialSortMonth) {
+                 const initiallySortedData = [...heatmapInputData].sort((a, b) => {
+                    const valA = typeof a[initialSortMonth] === 'number' ? a[initialSortMonth] : -Infinity;
+                    const valB = typeof b[initialSortMonth] === 'number' ? b[initialSortMonth] : -Infinity;
+                    return valB - valA;
+                });
+                renderTableBody(initiallySortedData, tbody);
+                if (headerRow.children[1]) { // If there's at least one month header
+                    headerRow.children[1].title = `Ordinato per vendite (decrescente) per ${initialSortMonth}. Clicca per ordinare per colore.`;
+                }
+            } else {
+                renderTableBody(heatmapInputData, tbody);
+            }
+
+
+            container.appendChild(table);
+
+            // Simple HTML Legend
+            legendContainer.innerHTML = `
+                <span style="font-size: 0.9em;">Legenda Colori (Relativa alla Media del Prodotto):</span><br>
+                <span class="legend-color-box" style="background-color: rgb(${colorRed.r},${colorRed.g},${colorRed.b});"></span> Molto Sotto Media
+                <span class="legend-color-box" style="background-color: rgb(${colorYellow.r},${colorYellow.g},${colorYellow.b});"></span> Vicino alla Media
+                <span class="legend-color-box" style="background-color: rgb(${colorGreen.r},${colorGreen.g},${colorGreen.b});"></span> Molto Sopra Media
+            `;
+            console.log("HTML Heatmap table generated and legend added.");
+        }
+
+
+        let datiVendite = [];
+        let rawVendite = [];
+        let graficoBarreMese = null;
+        let filtri = {
+            canali: [],
+            sku: [],
+            stati: [],
+            mesi: []
+        };
+        let selezione = {
+            canali: [],
+            sku: [],
+            stati: [],
+            mesi: []
+        };
+
+        function popolaFiltri() {
+            const canaliSet = new Set();
+            const skuSet = new Set();
+            const statiSet = new Set();
+            const mesiSet = new Set();
+            let minData = null; // Initialize minData
+            let maxData = null; // Initialize maxData
+            console.log(`--- popolaFiltri: Processing ${datiVendite.length} rows ---`); // Log total rows entering the function
+
+            // Extract statuses from all rows (include rows filtered out earlier)
+            rawVendite.forEach((riga) => {
+                const orderStatusValue = riga['order-status'];
+                if (orderStatusValue !== null && orderStatusValue !== undefined) {
+                    const stato = String(orderStatusValue).trim();
+                    if (stato) {
+                        statiSet.add(stato);
+                    }
+                }
+            });
+            datiVendite.forEach((riga, index) => {
+                if (riga['sales-channel']) canaliSet.add(riga['sales-channel']);
+                if (riga['sku']) skuSet.add(riga['sku']);
+
+                // --- Debugging Order Status ---
+                const orderStatusValue = riga['order-status'];
+                // Log the raw value for the first 20 rows or if it's one of the potentially missing ones
+                if (index < 20 || ['Cancelled', 'Shipping'].includes(String(orderStatusValue).trim())) {
+                    console.log(`Row ${index + 1}: Raw order-status =`, orderStatusValue, `(Type: ${typeof orderStatusValue})`);
+                }
+                // --- End Debugging ---
+
+                if (orderStatusValue !== null && orderStatusValue !== undefined) { // Check for actual existence
+                    const stato = String(orderStatusValue).trim(); // Convert to string, then trim
+                    if (stato) { // Check if not empty after conversion and trim
+                        statiSet.add(stato);
+                    } else {
+                         // Log if status becomes empty after trim
+                         if (index < 20 || ['Cancelled', 'Shipping'].includes(String(orderStatusValue).trim())) { // Log only relevant rows
+                            console.log(`Row ${index + 1}: Status became empty after String().trim() for raw value:`, orderStatusValue);
+                         }
+                    }
+                } else {
+                    // Log if status was null/undefined
+                    if (index < 20 || ['Cancelled', 'Shipping'].includes(String(orderStatusValue).trim())) { // Log only relevant rows
+                        console.log(`Row ${index + 1}: Raw order-status was null or undefined.`);
+                    }
+                }
+
+                if (riga['order-date']) {
+                    const dataRiga = typeof riga['order-date'] === 'string' ? riga['order-date'].substring(0, 10) : null;
+                    if (dataRiga) {
+                        let mese = dataRiga.substring(0, 7);
+                        mesiSet.add(mese);
+                        if (!minData || dataRiga < minData) {
+                            minData = dataRiga;
+                        }
+                        if (!maxData || dataRiga > maxData) {
+                            maxData = dataRiga;
+                        }
+                    }
+                }
+            });
+            filtri.canali = Array.from(canaliSet).sort();
+            filtri.sku = Array.from(skuSet).sort();
+            filtri.stati = Array.from(statiSet).sort();
+            filtri.mesi = Array.from(mesiSet).sort();
+
+            // --- Debugging Final Statuses ---
+            console.log("--- popolaFiltri: Final unique statuses found ---");
+            console.log(filtri.stati);
+            // --- End Debugging ---
+
+            selezione.canali = [...filtri.canali];
+            selezione.sku = [...filtri.sku];
+            selezione.stati = [...filtri.stati];
+            selezione.mesi = [...filtri.mesi]; 
+
+            selezione.periodo = { inizio: minData || '', fine: maxData || '' };
+            document.getElementById('dataInizio').value = minData || '';
+            document.getElementById('dataFine').value = maxData || '';
+
+            renderFiltri();
+            renderFiltroMese();
+            elaboraDati(); // Chiamata per aggiornare la dashboard con i dati iniziali
+        }
+        function renderFiltroMese() {
+            const selectMese = document.getElementById('filtroMese');
+            if (selectMese) {
+                selectMese.innerHTML = '<option value="">Tutti i mesi</option>' + filtri.mesi.map(mese => `<option value="${mese}" ${selezione.mesi.includes(mese)?'selected':''}>${mese}</option>`).join('');
+            }
+        }
+        function renderFiltri() {
+            // Filtro Canali
+            const filtroCanali = document.getElementById('filtroCanali');
+            filtroCanali.innerHTML = filtri.canali.map(canale =>
+                `<div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="canale_${canale}" value="${canale}" ${selezione.canali.includes(canale) ? 'checked' : ''} onchange="aggiornaSelezioneFiltro('canali', '${canale}')">
+                    <label class="form-check-label" for="canale_${canale}">${canale}</label>
+                </div>`
+            ).join('');
+        
+            // Filtro SKU
+            const filtroSKU = document.getElementById('filtroSKU');
+            filtroSKU.innerHTML = filtri.sku.map(sku =>
+                `<div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sku_${sku}" value="${sku}" ${selezione.sku.includes(sku) ? 'checked' : ''} onchange="aggiornaSelezioneFiltro('sku', '${sku}')">
+                    <label class="form-check-label" for="sku_${sku}">${sku}</label>
+                </div>`
+            ).join('');
+        
+            // Filtro Stati
+            const filtroStati = document.getElementById('filtroStati');
+            filtroStati.innerHTML = filtri.stati.map(stato =>
+                `<div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="stato_${stato}" value="${stato}" ${selezione.stati.includes(stato) ? 'checked' : ''} onchange="aggiornaSelezioneFiltro('stati', '${stato}')">
+                    <label class="form-check-label" for="stato_${stato}">${stato}</label>
+                </div>`
+            ).join('');
+        }
+        function aggiornaSelezioneFiltro(tipo, valore) {
+            if(tipo === 'mesi') {
+                selezione.mesi = valore ? [valore] : [...filtri.mesi];
+            } else {
+                const idx = selezione[tipo].indexOf(valore);
+                if (idx > -1) {
+                    selezione[tipo].splice(idx, 1);
+                } else {
+                    selezione[tipo].push(valore);
+                }
+            }
+            // Assicurati che i grafici si aggiornino sempre
+            setTimeout(() => {
+                elaboraDati();
+            }, 10);
+        }
+
+        function selezionaTuttiCanali() {
+            selezione.canali = [...filtri.canali];
+            renderFiltri();
+            // Assicurati che i grafici si aggiornino sempre
+            setTimeout(() => {
+                elaboraDati();
+            }, 10);
+        }
+
+        function deselezionaTuttiCanali() {
+            deselezionaTuttiFiltro('canali');
+        }
+
+        function selezionaTuttiFiltro(tipo) {
+            if (filtri[tipo]) {
+                selezione[tipo] = [...filtri[tipo]];
+                renderFiltri();
+                // Assicurati che i grafici si aggiornino sempre
+                setTimeout(() => {
+                    elaboraDati();
+                }, 10);
+            }
+        }
+
+        function deselezionaTuttiFiltro(tipo) {
+            if (filtri[tipo]) {
+                selezione[tipo] = [];
+                renderFiltri();
+                // Assicurati che i grafici si aggiornino sempre
+                setTimeout(() => {
+                    elaboraDati();
+                }, 10);
+            }
+        }
+
+        function selezionaTutti() {
+            selezione.canali = [...filtri.canali];
+            selezione.sku = [...filtri.sku];
+            selezione.stati = [...filtri.stati];
+            renderFiltri();
+            elaboraDati();
+        }
+
+        function deselezionaTutti() {
+            selezione.canali = [];
+            selezione.sku = [];
+            selezione.stati = [];
+            renderFiltri();
+            elaboraDati();
+        }
+
+        function aggiornaSelezionePeriodo() {
+            const dataInizioValue = document.getElementById('dataInizio').value;
+            const dataFineValue = document.getElementById('dataFine').value;
+            
+            selezione.periodo = { inizio: dataInizioValue, fine: dataFineValue };
+            elaboraDati();
+        }
+
+        function filtraDati() {
+            return datiVendite.filter(riga => {
+                const statoRigaOriginale = riga['order-status'];
+                const statoRigaPulito = statoRigaOriginale !== null && statoRigaOriginale !== undefined ? String(statoRigaOriginale).trim() : "";
+
+                const dataValida = riga['order-date'] && typeof riga['order-date'] === 'string';
+                const dataMatchPeriodo = !selezione.periodo || (!selezione.periodo.inizio && !selezione.periodo.fine) ||
+                                       (dataValida &&
+                                           (!selezione.periodo.inizio || riga['order-date'].substring(0,10) >= selezione.periodo.inizio) &&
+                                           (!selezione.periodo.fine || riga['order-date'].substring(0,10) <= selezione.periodo.fine)
+                                       );
+
+                return (selezione.canali.length === 0 || selezione.canali.includes(riga['sales-channel'])) &&
+                       (selezione.sku.length === 0 || selezione.sku.includes(riga['sku'])) &&
+                       (selezione.stati.length === 0 || selezione.stati.includes(statoRigaPulito)) &&
+                       dataMatchPeriodo;
+            });
+        }
+
+        function elaboraDati() {
+            const datiFiltrati = filtraDati();
+            const venditePerCanale = {};
+            const venditePerProdotto = {};
+            const venditePerMese = {};
+            const prodottiUnici = new Set(); 
+            let totaleVendite = 0;
+            let totaleUnita = 0;
+            const ordiniPerCanale = {}; 
+            const venditeProdottoPerMese = {}; 
+            const venditeCanalePerMese = {}; 
+            const idOrdiniUniciPerCanale = {}; 
+            let numeroOrdiniTotaliUnici = 0;    
+            const idOrdiniGlobaliUnici = new Set(); 
+            
+            prodottiUnici.clear(); 
+            idOrdiniGlobaliUnici.clear(); 
+            Object.keys(idOrdiniUniciPerCanale).forEach(key => delete idOrdiniUniciPerCanale[key]);
+            Object.keys(ordiniPerCanale).forEach(key => delete ordiniPerCanale[key]);
+
+
+            datiFiltrati.forEach(riga => {
+                const originalOrderStatus = String(riga['order-status'] || '').trim();
+                const lowerCaseOrderStatus = originalOrderStatus.toLowerCase();
+                const isPotentiallyProblematicStatus = lowerCaseOrderStatus.includes('shipped') || lowerCaseOrderStatus.includes('spedito') || lowerCaseOrderStatus.includes('shippen') || originalOrderStatus === 'Cancelled';
+
+                let importoItemVal;
+                const rawPrice = riga['item-price'];
+                if (typeof rawPrice === 'number') {
+                    importoItemVal = rawPrice;
+                } else if (typeof rawPrice === 'string' && rawPrice.trim() !== '') {
+                    const trimmedPrice = rawPrice.trim();
+                    const normalizedPriceString = trimmedPrice.replace(',', '.');
+                    importoItemVal = parseFloat(normalizedPriceString);
+                } else {
+                    importoItemVal = 0; 
+                }
+                 if (isNaN(importoItemVal)) importoItemVal = 0; 
+
+                const quantitaString = String(riga['quantity-purchased'] == null ? '0' : riga['quantity-purchased']).trim();
+                const quantitaVal = quantitaString === '' ? 0 : parseInt(quantitaString.replace(/[^0-9-]/g, ''));
+
+                if (isPotentiallyProblematicStatus) {
+                    console.log(`--- Processing order with status: "${originalOrderStatus}" ---`);
+                    console.log("  Full row data:", JSON.parse(JSON.stringify(riga)));
+                    console.log(`  Raw item-price: '${riga['item-price']}', Raw quantity: '${riga['quantity-purchased']}'`);
+                    console.log(`  Parsed item-price (importoItemVal): ${importoItemVal}, Parsed quantity (quantitaVal): ${quantitaVal}`);
+                }
+                
+                // Totale Vendite sums item-price for ALL items in the current filter (datiFiltrati)
+                totaleVendite += importoItemVal;
+
+                // Unità Vendute, Numero Ordini, and chart data are based on "Shipped" (or other actual sale statuses)
+                const isActualSaleStatus = (originalOrderStatus === 'Shipped'); // Define actual sale status
+
+                if (isActualSaleStatus) {
+                    if (!isNaN(quantitaVal) && quantitaVal > 0) {
+                        totaleUnita += quantitaVal;
+                    }
+                    // Count unique orders for these actual sales items
+                    if (riga['order-id'] && String(riga['order-id']).trim() !== '') {
+                        const orderId = riga['order-id'];
+                        if (!idOrdiniGlobaliUnici.has(orderId)) {
+                            numeroOrdiniTotaliUnici++;
+                            idOrdiniGlobaliUnici.add(orderId);
+                        }
+                    }
+                }
+                
+                // Aggregations for charts/tables (venditePerCanale, venditePerProdotto, venditePerMese)
+                // These will reflect all items in datiFiltrati, including Cancelled if they are part of the filter
+                if (riga['sku']) {
+                    prodottiUnici.add(riga['sku']); // Count unique SKUs from all items in datiFiltrati
+                    venditePerProdotto[riga['sku']] = (venditePerProdotto[riga['sku']] || 0) + importoItemVal;
+                }
+                if (riga['sales-channel']) {
+                    venditePerCanale[riga['sales-channel']] = (venditePerCanale[riga['sales-channel']] || 0) + importoItemVal;
+                     // For AOV per channel, count unique orders from all items in datiFiltrati for that channel
+                    if (riga['order-id'] && String(riga['order-id']).trim() !== '') {
+                        const canale = riga['sales-channel'];
+                        const orderId = riga['order-id'];
+                        if (!idOrdiniUniciPerCanale[canale]) {
+                            idOrdiniUniciPerCanale[canale] = new Set();
+                        }
+                        if (!idOrdiniUniciPerCanale[canale].has(orderId)) {
+                            ordiniPerCanale[canale] = (ordiniPerCanale[canale] || 0) + 1;
+                            idOrdiniUniciPerCanale[canale].add(orderId);
+                        }
+                    }
+                }
+                if (typeof riga['order-date'] === 'string' && riga['order-date'].length >= 7) {
+                    const mese = riga['order-date'].substring(0, 7);
+                    // venditePerMese (for the monthly sales bar chart) considers all items in filter
+                    venditePerMese[mese] = (venditePerMese[mese] || 0) + importoItemVal;
+
+                    // venditePerMese (for the monthly sales bar chart) considers all items in filter
+                    venditePerMese[mese] = (venditePerMese[mese] || 0) + importoItemVal;
+
+                    // Data for HEATMAP (venditeProdottoPerMese) and LINEAR CHANNEL (venditeCanalePerMese) charts
+                    // will also be based on all items in the current filter (datiFiltrati).
+                    if (riga['sales-channel']) {
+                        if (!venditeCanalePerMese[riga['sales-channel']]) venditeCanalePerMese[riga['sales-channel']] = {};
+                        venditeCanalePerMese[riga['sales-channel']][mese] = (venditeCanalePerMese[riga['sales-channel']][mese] || 0) + importoItemVal;
+                    }
+                    if (riga['sku']) {
+                        if (!venditeProdottoPerMese[riga['sku']]) venditeProdottoPerMese[riga['sku']] = {}; 
+                        venditeProdottoPerMese[riga['sku']][mese] = (venditeProdottoPerMese[riga['sku']][mese] || 0) + importoItemVal;
+                    }
+                }
+                if (isPotentiallyProblematicStatus || originalOrderStatus === 'Cancelled') {
+                     console.log(`  Item status "${originalOrderStatus}" - importoItemVal: ${importoItemVal} added to totaleVendite. Current Totale Vendite: ${totaleVendite}`);
+                }
+            });
+
+            // Fix: Ensure totaleVendite is a number and not NaN
+            const totaleVenditeVal = isNaN(totaleVendite) ? 0 : totaleVendite;
+            document.getElementById('totaleVendite').textContent = `€${totaleVenditeVal.toFixed(2)}`;
+
+            document.getElementById('numeroOrdini').textContent = numeroOrdiniTotaliUnici; // Based on actual sales (e.g. Shipped)
+            // AOV should be based on the sum of item-price for actual sales / number of actual sales orders
+            // However, if totaleVenditeVal now includes Cancelled (when filtered), this AOV might be misleading.
+            // For now, AOV uses totaleVenditeVal (which reflects the filter) and numeroOrdiniTotaliUnici (which reflects 'Shipped' from filter)
+            document.getElementById('valoreMedioOrdine').textContent = `€${(numeroOrdiniTotaliUnici > 0 ? (totaleVenditeVal / numeroOrdiniTotaliUnici) : 0).toFixed(2)}`;
+            
+            const numeroMesiConVendite = Object.keys(venditePerMese).length; // venditePerMese now reflects all items in filter
+            document.getElementById('mediaVenditeMensili').textContent = `€${(numeroMesiConVendite > 0 ? (totaleVenditeVal / numeroMesiConVendite) : 0).toFixed(2)}`;
+            
+            document.getElementById('unitaVendute').textContent = totaleUnita; // Based on actual sales (e.g. Shipped)
+            document.getElementById('prodottiUnici').textContent = prodottiUnici.size; // Based on all items in filter
+
+            const tbody = document.getElementById('tabellaCanali').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+
+            const datiCanali = Object.entries(venditePerCanale).map(([canale, vendite]) => ({
+                canale,
+                vendite,
+                percentuale: (totaleVenditeVal > 0 ? (vendite / totaleVenditeVal * 100) : 0).toFixed(1) // Percentage based on current totaleVenditeVal
+            }));
+
+            // Sort by sales in descending order
+            datiCanali.sort((a, b) => b.vendite - a.vendite);
+
+            datiCanali.forEach(dato => {
+                const riga = tbody.insertRow();
+                riga.insertCell(0).textContent = dato.canale;
+                riga.insertCell(1).textContent = `€${dato.vendite.toFixed(2)}`;
+                riga.insertCell(2).textContent = `${dato.percentuale}%`;
+            });
+
+            // Tabella AOV
+            const tbodyAOV = document.getElementById('tabellaAOV').getElementsByTagName('tbody')[0];
+            tbodyAOV.innerHTML = ''; // Clear before repopulating
+            const datiAOV = Object.keys(venditePerCanale).map(canale => { // venditePerCanale now reflects current filter
+                const vendite = venditePerCanale[canale] || 0;
+                const numOrdiniCanale = ordiniPerCanale[canale] || 0; // ordiniPerCanale counts unique orders in datiFiltrati for the channel
+                const aov = numOrdiniCanale > 0 ? (vendite / numOrdiniCanale) : 0;
+                return { canale, aov, numeroOrdini: numOrdiniCanale };
+            });
+            datiAOV.sort((a, b) => b.aov - a.aov); 
+            datiAOV.forEach(dato => {
+                const riga = tbodyAOV.insertRow();
+                riga.insertCell(0).textContent = dato.canale;
+                riga.insertCell(1).textContent = `€${dato.aov.toFixed(2)}`;
+                riga.insertCell(2).textContent = dato.numeroOrdini;
+            });
+
+
+
+            // Grafico a barre per mese
+            if (graficoBarreMese && typeof graficoBarreMese.destroy === 'function') graficoBarreMese.destroy();
+            const ctxBarreMese = document.getElementById('graficoBarreMese').getContext('2d');
+            const mesiOrdinati = Object.keys(venditePerMese).sort(); // venditePerMese reflects current filter
+            graficoBarreMese = new Chart(ctxBarreMese, {
+                type: 'bar',
+                data: {
+                    labels: mesiOrdinati,
+                    datasets: [{
+                        label: 'Vendite per Mese (€)',
+                        data: mesiOrdinati.map(mese => venditePerMese[mese]),
+                        backgroundColor: '#6366f1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Grafico Lineare Andamento Vendite per Canale
+            const mesiUniciGraficiLineari = [...filtri.mesi];
+
+            // Prepare data for Heatmap
+            const heatmapDataInput = [];
+            // First, calculate total sales per SKU from venditeProdottoPerMese to find the top 10
+            const skuTotalsForHeatmap = {};
+            Object.keys(venditeProdottoPerMese).forEach(sku => {
+                skuTotalsForHeatmap[sku] = 0;
+                if (venditeProdottoPerMese[sku]) {
+                    Object.keys(venditeProdottoPerMese[sku]).forEach(mese => {
+                        skuTotalsForHeatmap[sku] += venditeProdottoPerMese[sku][mese];
+                    });
+                }
+            });
+
+            const sortedSkusByTotal = Object.entries(skuTotalsForHeatmap)
+                .sort(([,a],[,b]) => b-a)
+                .slice(0, 10) // Take top 10
+                .map(([sku]) => sku);
+
+            // Get all unique months present in the filtered data for the heatmap, specifically for the top SKUs
+            const allMonthsForHeatmap = new Set();
+            sortedSkusByTotal.forEach(sku => {
+                if (venditeProdottoPerMese[sku]) {
+                    Object.keys(venditeProdottoPerMese[sku]).forEach(month => allMonthsForHeatmap.add(month));
+                }
+            });
+            const sortedUniqueMonths = Array.from(allMonthsForHeatmap).sort();
+
+            sortedSkusByTotal.forEach(sku => {
+                const skuRow = { sku: sku };
+                // Ensure all months (derived from data of top SKUs) are present in each row
+                sortedUniqueMonths.forEach(month => {
+                    skuRow[month] = venditeProdottoPerMese[sku]?.[month] || 0; // Default to 0 if no sales for that month
+                });
+                heatmapDataInput.push(skuRow);
+            });
+            
+            console.log("Data prepared for heatmap:", heatmapDataInput);
+            drawHeatmap(heatmapDataInput);
+
+            // Crea automaticamente il grafico delle province
+            createProvinceChart();
+
+            // Codice di sincronizzazione rimosso - elementi non più presenti
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileName = file.name.toLowerCase();
+                function normalizzaColonne(riga) {
+                    const mapping = {
+                        'amazon-order-id': 'order-id', 
+                        'purchase-date': 'order-date',
+                        'orderdate': 'order-date',
+                        'data-ordine': 'order-date',
+                        'product-id': 'sku',
+                        'prodotto': 'sku',
+                        'saleschannel': 'sales-channel',
+                        'canale': 'sales-channel',
+                        'orderstatus': 'order-status',
+                        'stato': 'order-status',
+                        'itemprice': 'item-price',
+                        'prezzo': 'item-price',
+                        'quantity': 'quantity-purchased', 
+                        'quantita': 'quantity-purchased',
+                        'shipcountry': 'ship-country',
+                        'paese-spedizione': 'ship-country',
+                        'country': 'ship-country',
+                        'paese': 'ship-country',
+                        'shipstate': 'ship-state',
+                        'stato-spedizione': 'ship-state',
+                        'state': 'ship-state',
+                        'regione': 'ship-state',
+                        'provincia': 'ship-state'
+                    };
+                    const nuovaRiga = {};
+                    Object.keys(riga).forEach(k => {
+                        let chiave = k.trim().toLowerCase().replace(/\s|_/g, '-');
+                        chiave = mapping[chiave] || chiave;
+                        nuovaRiga[chiave] = typeof riga[k] === 'string' ? riga[k].trim() : riga[k];
+                    });
+                    return nuovaRiga;
+                }
+                if (fileName.endsWith('.csv')) {
+                    Papa.parse(file, {
+                        complete: function(results) {
+                            console.log(`Raw CSV data loaded: ${results.data.length} rows`);
+                            console.log('First 3 raw CSV rows:', results.data.slice(0, 3));
+                            
+                            // Debug: mostra tutte le colonne disponibili
+                            if (results.data.length > 0) {
+                                console.log('Colonne disponibili nel CSV:', Object.keys(results.data[0]));
+                            }
+                            
+                            rawVendite = results.data.map(normalizzaColonne);
+                            console.log(`After normalization: ${rawVendite.length} rows`);
+                            console.log('First 3 normalized rows:', rawVendite.slice(0, 3));
+                            
+                            // Debug: mostra tutte le colonne dopo normalizzazione
+                            if (rawVendite.length > 0) {
+                                console.log('Colonne dopo normalizzazione:', Object.keys(rawVendite[0]));
+                            }
+                            
+                            datiVendite = rawVendite.filter(riga => {
+                                const status = riga['order-status'];
+                                const hasValidStatus = status && typeof status === 'string' && status.trim() !== '';
+                                const hasPrice = riga['item-price'] != null && riga['item-price'] !== '';
+                                const hasQuantity = riga['quantity-purchased'] != null && riga['quantity-purchased'] !== '';
+                                
+                                // Log problematic rows
+                                if (!hasValidStatus || !hasPrice || !hasQuantity) {
+                                    console.log('Filtered out CSV row:', {
+                                        'order-status': riga['order-status'],
+                                        'item-price': riga['item-price'],
+                                        'quantity-purchased': riga['quantity-purchased'],
+                                        hasValidStatus,
+                                        hasPrice,
+                                        hasQuantity
+                                    });
+                                }
+                                
+                                return hasValidStatus && hasPrice && hasQuantity;
+                            });
+                            console.log(`After filtering: ${datiVendite.length} rows`);
+                            console.log("Dati Vendite (after initial filter, before popolaFiltri):", JSON.parse(JSON.stringify(datiVendite.slice(0,5))));
+                            popolaFiltri();
+                        },
+                        header: true,
+                        skipEmptyLines: true,
+                        delimiter: ";" 
+                    });
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, {type: 'array'});
+                        const sheetName = workbook.SheetNames[0];
+                        const sheet = workbook.Sheets[sheetName];
+                        const json = XLSX.utils.sheet_to_json(sheet, {defval: ''});
+                        console.log(`Raw Excel data loaded: ${json.length} rows`);
+                        console.log('First 3 raw rows:', json.slice(0, 3));
+                        
+                        // Debug: mostra tutte le colonne disponibili
+                        if (json.length > 0) {
+                            console.log('Colonne disponibili nel Excel:', Object.keys(json[0]));
+                        }
+                        
+                        rawVendite = json.map(normalizzaColonne);
+                        console.log(`After normalization: ${rawVendite.length} rows`);
+                        console.log('First 3 normalized rows:', rawVendite.slice(0, 3));
+                        
+                        // Debug: mostra tutte le colonne dopo normalizzazione
+                        if (rawVendite.length > 0) {
+                            console.log('Colonne dopo normalizzazione:', Object.keys(rawVendite[0]));
+                        }
+                        
+                        datiVendite = rawVendite.filter(riga => {
+                            const status = riga['order-status'];
+                            const hasValidStatus = status && typeof status === 'string' && status.trim() !== '';
+                            const hasPrice = riga['item-price'] != null && riga['item-price'] !== '';
+                            const hasQuantity = riga['quantity-purchased'] != null && riga['quantity-purchased'] !== '';
+                            
+                            // Log problematic rows
+                            if (!hasValidStatus || !hasPrice || !hasQuantity) {
+                                console.log('Filtered out row:', {
+                                    'order-status': riga['order-status'],
+                                    'item-price': riga['item-price'],
+                                    'quantity-purchased': riga['quantity-purchased'],
+                                    hasValidStatus,
+                                    hasPrice,
+                                    hasQuantity
+                                });
+                            }
+                            
+                            return hasValidStatus && hasPrice && hasQuantity;
+                        });
+                        console.log(`After filtering: ${datiVendite.length} rows`);
+                        console.log("Dati Vendite (after initial filter, before popolaFiltri):", JSON.parse(JSON.stringify(datiVendite.slice(0,5))));
+                        popolaFiltri();
+                        elaboraDati();
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+            }
+        });
+
+
+
+        async function exportToPDF() {
+            try {
+                // Mostra loading
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generando PDF...';
+                button.disabled = true;
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Configurazione
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 20;
+                const chartWidth = pageWidth - (margin * 2);
+                const chartHeight = 80;
+                let yPosition = margin;
+
+                // Titolo del documento
+                pdf.setFontSize(20);
+                pdf.setTextColor(40, 40, 40);
+                pdf.text('Dashboard Vendite - Report Grafici', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 20;
+
+                // Data di generazione
+                pdf.setFontSize(10);
+                pdf.setTextColor(100, 100, 100);
+                const currentDate = new Date().toLocaleDateString('it-IT');
+                pdf.text(`Generato il: ${currentDate}`, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 20;
+
+                // Funzione per aggiungere un grafico al PDF
+                const addChartToPDF = async (chartId, title) => {
+                    const canvas = document.getElementById(chartId);
+                    if (canvas && canvas.style.display !== 'none') {
+                        // Verifica se c'è spazio sufficiente, altrimenti aggiungi nuova pagina
+                        if (yPosition + chartHeight + 30 > pageHeight - margin) {
+                            pdf.addPage();
+                            yPosition = margin;
+                        }
+
+                        // Titolo del grafico
+                        pdf.setFontSize(14);
+                        pdf.setTextColor(40, 40, 40);
+                        pdf.text(title, margin, yPosition);
+                        yPosition += 10;
+
+                        // Converti canvas in immagine
+                        const imgData = canvas.toDataURL('image/png', 1.0);
+                        pdf.addImage(imgData, 'PNG', margin, yPosition, chartWidth, chartHeight);
+                        yPosition += chartHeight + 15;
+                    }
+                };
+
+                // Aggiungi tutti i grafici
+                 await addChartToPDF('top10SkuChart', 'Top 10 SKU per Vendite');
+                 await addChartToPDF('amazonChannelsChart', 'Distribuzione Canali Amazon');
+                 await addChartToPDF('orderStatusChart', 'Stato degli Ordini');
+                 await addChartToPDF('dailySalesTrendChart', 'Andamento Vendite Giornaliere');
+                 await addChartToPDF('weeklyBarChart', 'Vendite per Giorno della Settimana');
+                
+                // Aggiungi il grafico orario se è visibile
+                if (document.getElementById('hourlyChartContainer').style.display !== 'none') {
+                    const selectedDay = document.getElementById('selectedDayTitle').textContent;
+                    await addChartToPDF('hourlyBarChart', `Vendite per Fascia Oraria - ${selectedDay}`);
+                }
+                 await addChartToPDF('graficoBarreMese', 'Vendite per Mese');
+
+                // Aggiungi footer
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFontSize(8);
+                    pdf.setTextColor(150, 150, 150);
+                    pdf.text(`Pagina ${i} di ${totalPages}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+                }
+
+                // Salva il PDF
+                const fileName = `dashboard-vendite-${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+
+                // Ripristina il pulsante
+                button.innerHTML = originalText;
+                button.disabled = false;
+
+                showToast('PDF esportato con successo!', 'success');
+
+            } catch (error) {
+                console.error('Errore durante l\'esportazione PDF:', error);
+                showToast('Errore durante l\'esportazione PDF', 'error');
+                
+                // Ripristina il pulsante in caso di errore
+                const button = event.target;
+                button.innerHTML = '<i class="fas fa-file-pdf me-2"></i>Esporta in PDF';
+                button.disabled = false;
+            }
+        }
+
+        function handleSkuSearch() {
+            const searchTerm = document.getElementById('searchSkuInput').value.toLowerCase();
+            const skuCheckboxes = document.querySelectorAll('#filtroSKU .form-check');
+
+            skuCheckboxes.forEach(checkboxDiv => {
+                const label = checkboxDiv.querySelector('.form-check-label').textContent.toLowerCase();
+                if (label.includes(searchTerm)) {
+                    checkboxDiv.style.display = ''; 
+                } else {
+                    checkboxDiv.style.display = 'none'; 
+                }
+            });
+        }
+
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+                showToast('Tema chiaro attivato', 'success');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+                showToast('Tema scuro attivato', 'success');
+            }
+        }
+
+        // Toast Notification Function
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container') || createToastContainer();
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            toast.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="${icons[type]} me-2"></i>
+                    <span>${message}</span>
+                    <button class="btn-close btn-close-white ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+            return container;
+        }
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            // Add floating action button
+            const fab = document.createElement('button');
+            fab.className = 'fab';
+            fab.innerHTML = '<i class="fas fa-refresh"></i>';
+            fab.title = 'Aggiorna Dashboard';
+            fab.onclick = function() {
+                showToast('Dashboard aggiornata!', 'success');
+                if (typeof elaboraDati === 'function') {
+                    elaboraDati();
+                }
+            };
+            document.body.appendChild(fab);
+            
+            // Add loading animation to buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!this.classList.contains('loading')) {
+                        const originalText = this.innerHTML;
+                        this.classList.add('loading');
+                        this.innerHTML = '<span class="loading-spinner me-2"></span>Caricamento...';
+                        
+                        setTimeout(() => {
+                            this.classList.remove('loading');
+                            this.innerHTML = originalText;
+                        }, 1000);
+                    }
+                });
+            });
+        });
+
+        // Enhanced file upload with progress
+        function enhanceFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const originalHandler = fileInput.onchange;
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files[0]) {
+                    showToast('Caricamento file in corso...', 'info');
+                    
+                    // Simulate progress
+                    setTimeout(() => {
+                        showToast('File caricato con successo!', 'success');
+                    }, 1500);
+                }
+            });
+        }
+
+        // Call enhance functions
+        document.addEventListener('DOMContentLoaded', enhanceFileUpload);
+
+        // Funzioni per i nuovi grafici
+        let top10SkuChart, amazonChannelsChart, orderStatusChart, dailySalesTrendChart, weeklyBarChart, hourlyBarChart;
+
+        function createNewCharts() {
+            if (!datiVendite || datiVendite.length === 0) {
+                console.log('Nessun dato disponibile per i nuovi grafici');
+                return;
+            }
+
+            createTop10SkuChart();
+            createAmazonChannelsChart();
+            createOrderStatusChart();
+            createDailySalesTrendChart();
+            createWeeklyBarChart();
+            updateGeographicalTable();
+        }
+
+        function createTop10SkuChart() {
+            const datiFiltrati = filtraDati();
+            const skuSales = {};
+            datiFiltrati.forEach(row => {
+                const sku = row.sku || row['product-name'] || 'N/A';
+                const price = parseFloat(row['item-price']) || 0;
+                const quantity = parseInt(row['quantity-purchased']) || 0;
+                const total = price * quantity;
+                
+                if (skuSales[sku]) {
+                    skuSales[sku] += total;
+                } else {
+                    skuSales[sku] = total;
+                }
+            });
+
+            const sortedSku = Object.entries(skuSales)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
+
+            const ctx = document.getElementById('top10SkuChart').getContext('2d');
+            if (top10SkuChart) top10SkuChart.destroy();
+            
+            top10SkuChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedSku.map(([sku]) => sku.length > 20 ? sku.substring(0, 20) + '...' : sku),
+                    datasets: [{
+                        label: 'Vendite (€)',
+                        data: sortedSku.map(([, sales]) => sales),
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAmazonChannelsChart() {
+            const datiFiltrati = filtraDati();
+            const amazonChannels = {};
+            datiFiltrati.forEach(row => {
+                const channel = row['sales-channel'] || 'N/A';
+                if (channel.toLowerCase().includes('amazon')) {
+                    const price = parseFloat(row['item-price']) || 0;
+                    const quantity = parseInt(row['quantity-purchased']) || 0;
+                    const total = price * quantity;
+                    
+                    if (amazonChannels[channel]) {
+                        amazonChannels[channel] += total;
+                    } else {
+                        amazonChannels[channel] = total;
+                    }
+                }
+            });
+
+            const ctx = document.getElementById('amazonChannelsChart').getContext('2d');
+            if (amazonChannelsChart) amazonChannelsChart.destroy();
+            
+            amazonChannelsChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(amazonChannels),
+                    datasets: [{
+                        data: Object.values(amazonChannels),
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    onClick: function(event, elements) {
+                        showSalesChannelAnalysis();
+                    }
+                }
+            });
+        }
+
+        function createOrderStatusChart() {
+            const datiFiltrati = filtraDati();
+            const statusCount = {};
+            datiFiltrati.forEach(row => {
+                const status = row['order-status'] || 'N/A';
+                statusCount[status] = (statusCount[status] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('orderStatusChart').getContext('2d');
+            if (orderStatusChart) orderStatusChart.destroy();
+            
+            orderStatusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusCount),
+                    datasets: [{
+                        data: Object.values(statusCount),
+                        backgroundColor: [
+                            '#28a745',
+                            '#ffc107',
+                            '#dc3545',
+                            '#17a2b8',
+                            '#6f42c1'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    onClick: function(event, elements) {
+                        showSalesChannelAnalysis();
+                    }
+                }
+            });
+        }
+
+        function createDailySalesTrendChart() {
+            const datiFiltrati = filtraDati();
+            const dailySales = {};
+            datiFiltrati.forEach(row => {
+                const date = row['purchase-date'] || row['order-date'];
+                if (date) {
+                    const dateKey = new Date(date).toISOString().split('T')[0];
+                    const price = parseFloat(row['item-price']) || 0;
+                    const quantity = parseInt(row['quantity-purchased']) || 0;
+                    const total = price * quantity;
+                    
+                    if (dailySales[dateKey]) {
+                        dailySales[dateKey] += total;
+                    } else {
+                        dailySales[dateKey] = total;
+                    }
+                }
+            });
+
+            const sortedDates = Object.keys(dailySales).sort();
+            const salesData = sortedDates.map(date => dailySales[date]);
+
+            const ctx = document.getElementById('dailySalesTrendChart').getContext('2d');
+            if (dailySalesTrendChart) dailySalesTrendChart.destroy();
+            
+            dailySalesTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedDates.map(date => new Date(date).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Vendite Giornaliere (€)',
+                        data: salesData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createWeeklyBarChart() {
+            const datiFiltrati = filtraDati();
+            // Raggruppa i dati per giorno della settimana
+            const weeklyData = {
+                'Lunedì': 0,
+                'Martedì': 0,
+                'Mercoledì': 0,
+                'Giovedì': 0,
+                'Venerdì': 0,
+                'Sabato': 0,
+                'Domenica': 0
+            };
+
+            datiFiltrati.forEach(row => {
+                const dateStr = row['purchase-date'] || row['order-date'];
+                if (dateStr) {
+                    const date = new Date(dateStr);
+                    if (!isNaN(date.getTime())) {
+                        const dayNames = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+                        const dayName = dayNames[date.getDay()];
+                        const price = parseFloat(row['item-price']) || 0;
+                        weeklyData[dayName] += price;
+                    }
+                }
+            });
+
+            const ctx = document.getElementById('weeklyBarChart').getContext('2d');
+            if (weeklyBarChart) weeklyBarChart.destroy();
+
+            weeklyBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(weeklyData),
+                    datasets: [{
+                        label: 'Vendite (€)',
+                        data: Object.values(weeklyData),
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(67, 233, 123, 0.8)',
+                            'rgba(79, 172, 254, 0.8)',
+                            'rgba(245, 87, 108, 0.8)',
+                            'rgba(56, 249, 215, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(102, 126, 234, 1)',
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(255, 107, 107, 1)',
+                            'rgba(67, 233, 123, 1)',
+                            'rgba(79, 172, 254, 1)',
+                            'rgba(245, 87, 108, 1)',
+                            'rgba(56, 249, 215, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Vendite: €${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                maxRotation: 45
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const dayName = Object.keys(weeklyData)[index];
+                            showHourlyChart(dayName);
+                        }
+                    }
+                }
+            });
+        }
+
+        function showHourlyChart(dayName) {
+            // Mostra il container del grafico orario
+            document.getElementById('hourlyChartContainer').style.display = 'block';
+            document.getElementById('selectedDayTitle').textContent = dayName;
+            
+            // Scroll al grafico orario
+            document.getElementById('hourlyChartContainer').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            
+            // Crea il grafico delle vendite per fascia oraria
+            createHourlyChart(dayName);
+        }
+
+        function hideHourlyChart() {
+            document.getElementById('hourlyChartContainer').style.display = 'none';
+        }
+
+        function showSalesChannelAnalysis() {
+            // Mostra il container dell'analisi canali di vendita
+            document.getElementById('salesChannelAnalysisContainer').style.display = 'block';
+            
+            // Scroll all'analisi canali
+            document.getElementById('salesChannelAnalysisContainer').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function hideSalesChannelAnalysis() {
+            document.getElementById('salesChannelAnalysisContainer').style.display = 'none';
+        }
+
+        let provinceChartVisible = true;
+        let cityChartVisible = false;
+        let provinceChart = null;
+        let cityChart = null;
+        let selectedProvince = null;
+        
+
+        function toggleProvinceChart() {
+            if (provinceChartVisible) {
+                hideProvinceChart();
+            } else {
+                showProvinceChart();
+            }
+        }
+
+        function showProvinceChart() {
+            // Nascondi la tabella
+            document.getElementById('geographicalTableContainer').style.display = 'none';
+            // Mostra il grafico province
+            document.getElementById('provinceChartContainer').style.display = 'block';
+            provinceChartVisible = true;
+            
+            // Crea il grafico delle province
+            createProvinceChart();
+            
+            // Scroll al grafico
+            document.getElementById('provinceChartContainer').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function hideProvinceChart() {
+            // Mostra la tabella
+            document.getElementById('geographicalTableContainer').style.display = 'block';
+            // Nascondi il grafico province
+            document.getElementById('provinceChartContainer').style.display = 'none';
+            provinceChartVisible = false;
+            
+            // Distruggi il grafico esistente
+            if (provinceChart) {
+                provinceChart.destroy();
+                provinceChart = null;
+            }
+        }
+
+        function showCityChart() {
+            if (!selectedProvince) return;
+            
+            // Nascondi il grafico province
+            document.getElementById('provinceChartContainer').style.display = 'none';
+            // Mostra il grafico città
+            document.getElementById('cityChartContainer').style.display = 'block';
+            cityChartVisible = true;
+            
+            // Aggiorna il nome della provincia selezionata
+            document.getElementById('selectedProvinceName').textContent = selectedProvince;
+            
+            // Crea il grafico delle città
+            createCityChart(selectedProvince);
+            
+            // Scroll al grafico
+            document.getElementById('cityChartContainer').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+
+        function hideCityChart() {
+            // Nascondi il grafico città
+            document.getElementById('cityChartContainer').style.display = 'none';
+            // Mostra la tabella
+            document.getElementById('geographicalTableContainer').style.display = 'block';
+            cityChartVisible = false;
+            
+            // Distruggi il grafico esistente
+            if (cityChart) {
+                cityChart.destroy();
+                cityChart = null;
+            }
+            
+            // Reset selezione
+            selectedProvince = null;
+            document.getElementById('showCityBtn').style.display = 'none';
+        }
+
+        function backToProvinceChart() {
+            // Nascondi il grafico città
+            document.getElementById('cityChartContainer').style.display = 'none';
+            // Mostra il grafico province
+            document.getElementById('provinceChartContainer').style.display = 'block';
+            cityChartVisible = false;
+            
+            // Distruggi il grafico città
+            if (cityChart) {
+                cityChart.destroy();
+                cityChart = null;
+            }
+        }
+
+        // Funzione per normalizzare i nomi delle province
+        function normalizeProvinceName(provinceName) {
+            if (!provinceName) return 'Provincia non specificata';
+            
+            const normalized = provinceName.trim().toLowerCase();
+            
+            // Mappa delle province italiane con le loro variazioni
+            const provinceMap = {
+                // Piemonte
+                'torino': 'Torino', 'to': 'Torino', 'turin': 'Torino',
+                'cuneo': 'Cuneo', 'cn': 'Cuneo',
+                'alessandria': 'Alessandria', 'al': 'Alessandria',
+                'asti': 'Asti', 'at': 'Asti',
+                'biella': 'Biella', 'bi': 'Biella',
+                'novara': 'Novara', 'no': 'Novara',
+                'verbano-cusio-ossola': 'Verbano-Cusio-Ossola', 'vb': 'Verbano-Cusio-Ossola', 'verbania': 'Verbano-Cusio-Ossola',
+                'vercelli': 'Vercelli', 'vc': 'Vercelli',
+                
+                // Lombardia
+                'milano': 'Milano', 'mi': 'Milano', 'milan': 'Milano',
+                'bergamo': 'Bergamo', 'bg': 'Bergamo',
+                'brescia': 'Brescia', 'bs': 'Brescia',
+                'como': 'Como', 'co': 'Como',
+                'cremona': 'Cremona', 'cr': 'Cremona',
+                'lecco': 'Lecco', 'lc': 'Lecco',
+                'lodi': 'Lodi', 'lo': 'Lodi',
+                'mantova': 'Mantova', 'mn': 'Mantova',
+                'monza e brianza': 'Monza e Brianza', 'mb': 'Monza e Brianza', 'monza': 'Monza e Brianza',
+                'pavia': 'Pavia', 'pv': 'Pavia',
+                'sondrio': 'Sondrio', 'so': 'Sondrio',
+                'varese': 'Varese', 'va': 'Varese',
+                
+                // Veneto
+                'venezia': 'Venezia', 've': 'Venezia', 'venice': 'Venezia',
+                'verona': 'Verona', 'vr': 'Verona',
+                'vicenza': 'Vicenza', 'vi': 'Vicenza',
+                'padova': 'Padova', 'pd': 'Padova', 'padua': 'Padova',
+                'treviso': 'Treviso', 'tv': 'Treviso',
+                'rovigo': 'Rovigo', 'ro': 'Rovigo',
+                'belluno': 'Belluno', 'bl': 'Belluno',
+                
+                // Lazio
+                'roma': 'Roma', 'rm': 'Roma', 'rome': 'Roma',
+                'frosinone': 'Frosinone', 'fr': 'Frosinone',
+                'latina': 'Latina', 'lt': 'Latina',
+                'rieti': 'Rieti', 'ri': 'Rieti',
+                'viterbo': 'Viterbo', 'vt': 'Viterbo',
+                
+                // Campania
+                'napoli': 'Napoli', 'na': 'Napoli', 'naples': 'Napoli',
+                'salerno': 'Salerno', 'sa': 'Salerno',
+                'caserta': 'Caserta', 'ce': 'Caserta',
+                'avellino': 'Avellino', 'av': 'Avellino',
+                'benevento': 'Benevento', 'bn': 'Benevento',
+                
+                // Sicilia
+                'palermo': 'Palermo', 'pa': 'Palermo',
+                'catania': 'Catania', 'ct': 'Catania',
+                'messina': 'Messina', 'me': 'Messina',
+                'siracusa': 'Siracusa', 'sr': 'Siracusa', 'syracuse': 'Siracusa',
+                'trapani': 'Trapani', 'tp': 'Trapani',
+                'agrigento': 'Agrigento', 'ag': 'Agrigento',
+                'caltanissetta': 'Caltanissetta', 'cl': 'Caltanissetta',
+                'enna': 'Enna', 'en': 'Enna',
+                'ragusa': 'Ragusa', 'rg': 'Ragusa',
+                
+                // Emilia-Romagna
+                'bologna': 'Bologna', 'bo': 'Bologna',
+                'modena': 'Modena', 'mo': 'Modena',
+                'parma': 'Parma', 'pr': 'Parma',
+                'reggio emilia': 'Reggio Emilia', 're': 'Reggio Emilia', 'reggio nell\'emilia': 'Reggio Emilia',
+                'ferrara': 'Ferrara', 'fe': 'Ferrara',
+                'forlì-cesena': 'Forlì-Cesena', 'fc': 'Forlì-Cesena', 'forli': 'Forlì-Cesena',
+                'piacenza': 'Piacenza', 'pc': 'Piacenza',
+                'ravenna': 'Ravenna', 'ra': 'Ravenna',
+                'rimini': 'Rimini', 'rn': 'Rimini',
+                
+                // Altre regioni principali
+                'firenze': 'Firenze', 'fi': 'Firenze', 'florence': 'Firenze',
+                'genova': 'Genova', 'ge': 'Genova', 'genoa': 'Genova',
+                'bari': 'Bari', 'ba': 'Bari',
+                'catanzaro': 'Catanzaro', 'cz': 'Catanzaro',
+                'cagliari': 'Cagliari', 'ca': 'Cagliari',
+                'trieste': 'Trieste', 'ts': 'Trieste',
+                'bolzano': 'Bolzano', 'bz': 'Bolzano', 'bozen': 'Bolzano',
+                'trento': 'Trento', 'tn': 'Trento',
+                'aosta': 'Aosta', 'ao': 'Aosta'
+            };
+            
+            // Cerca una corrispondenza nella mappa
+            if (provinceMap[normalized]) {
+                return provinceMap[normalized];
+            }
+            
+            // Se non trova una corrispondenza, capitalizza la prima lettera
+            return provinceName.charAt(0).toUpperCase() + provinceName.slice(1).toLowerCase();
+        }
+        
+        // Funzione per normalizzare i nomi delle città
+        function normalizeCityName(cityName) {
+            if (!cityName) return 'Città non specificata';
+            
+            const normalized = cityName.trim().toLowerCase();
+            
+            // Mappa delle città italiane con le loro variazioni
+            const cityMap = {
+                // Città principali
+                'roma': 'Roma', 'rome': 'Roma',
+                'milano': 'Milano', 'milan': 'Milano',
+                'napoli': 'Napoli', 'naples': 'Napoli',
+                'torino': 'Torino', 'turin': 'Torino',
+                'palermo': 'Palermo',
+                'genova': 'Genova', 'genoa': 'Genova',
+                'bologna': 'Bologna',
+                'firenze': 'Firenze', 'florence': 'Firenze',
+                'bari': 'Bari',
+                'catania': 'Catania',
+                'venezia': 'Venezia', 'venice': 'Venezia',
+                'verona': 'Verona',
+                'messina': 'Messina',
+                'padova': 'Padova', 'padua': 'Padova',
+                'trieste': 'Trieste',
+                'brescia': 'Brescia',
+                'taranto': 'Taranto',
+                'prato': 'Prato',
+                'reggio calabria': 'Reggio Calabria',
+                'modena': 'Modena',
+                'reggio emilia': 'Reggio Emilia',
+                'perugia': 'Perugia',
+                'livorno': 'Livorno',
+                'ravenna': 'Ravenna',
+                'cagliari': 'Cagliari',
+                'foggia': 'Foggia',
+                'rimini': 'Rimini',
+                'salerno': 'Salerno',
+                'ferrara': 'Ferrara',
+                'sassari': 'Sassari',
+                'latina': 'Latina',
+                'giugliano in campania': 'Giugliano in Campania',
+                'monza': 'Monza',
+                'siracusa': 'Siracusa', 'syracuse': 'Siracusa',
+                'pescara': 'Pescara',
+                'bergamo': 'Bergamo',
+                'forlì': 'Forlì', 'forli': 'Forlì',
+                'trento': 'Trento',
+                'vicenza': 'Vicenza',
+                'terni': 'Terni',
+                'bolzano': 'Bolzano', 'bozen': 'Bolzano',
+                'novara': 'Novara',
+                'piacenza': 'Piacenza',
+                'ancona': 'Ancona',
+                'andria': 'Andria',
+                'arezzo': 'Arezzo',
+                'udine': 'Udine',
+                'cesena': 'Cesena',
+                'lecce': 'Lecce',
+                'pesaro': 'Pesaro',
+                'barletta': 'Barletta',
+                'alessandria': 'Alessandria',
+                'la spezia': 'La Spezia',
+                'pisa': 'Pisa',
+                'catanzaro': 'Catanzaro',
+                'pistoia': 'Pistoia',
+                'como': 'Como',
+                'treviso': 'Treviso',
+                'varese': 'Varese',
+                'fiumicino': 'Fiumicino',
+                'caserta': 'Caserta',
+                'asti': 'Asti',
+                'cinisello balsamo': 'Cinisello Balsamo',
+                'sesto san giovanni': 'Sesto San Giovanni',
+                'guidonia montecelio': 'Guidonia Montecelio',
+                'caltanissetta': 'Caltanissetta',
+                'brindisi': 'Brindisi',
+                'massa': 'Massa',
+                'cosenza': 'Cosenza',
+                'cremona': 'Cremona'
+            };
+            
+            // Cerca una corrispondenza nella mappa
+            if (cityMap[normalized]) {
+                return cityMap[normalized];
+            }
+            
+            // Se non trova una corrispondenza, capitalizza la prima lettera di ogni parola
+            return cityName.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+        }
+        
+        function createProvinceChart() {
+            // Elabora i dati per province italiane
+            const datiFiltrati = filtraDati();
+            console.log('Dati filtrati per grafico province:', datiFiltrati.length);
+            
+            provinceData = {}; // Reset dei dati globali
+            
+            datiFiltrati.forEach(row => {
+                const country = row['ship-country'] || '';
+                const rawState = row['ship-state'] || 'Provincia non specificata';
+                const state = normalizeProvinceName(rawState);
+                
+                // Filtra solo per l'Italia
+                if (country.toLowerCase() === 'italy' || country.toLowerCase() === 'italia' || country.toLowerCase() === 'it') {
+                    const price = parseFloat(row['item-price']) || 0;
+                    const quantity = parseInt(row['quantity-purchased']) || 0;
+                    const total = price * quantity;
+                    
+                    if (!provinceData[state]) {
+                        provinceData[state] = {
+                            orders: 0,
+                            totalSales: 0,
+                            cities: {}
+                        };
+                    }
+                    
+                    provinceData[state].orders += 1;
+                    provinceData[state].totalSales += total;
+                    
+                    // Aggiungi anche i dati delle città
+                    const rawCity = row['ship-city'] || 'Città non specificata';
+                    const city = normalizeCityName(rawCity);
+                    if (!provinceData[state].cities[city]) {
+                        provinceData[state].cities[city] = {
+                            orders: 0,
+                            totalSales: 0
+                        };
+                    }
+                    provinceData[state].cities[city].orders += 1;
+                    provinceData[state].cities[city].totalSales += total;
+                }
+            });
+            
+            console.log('Dati province processati:', provinceData);
+            
+            // Prepara i dati per il grafico
+            const provinces = Object.keys(provinceData)
+                .sort((a, b) => provinceData[b].totalSales - provinceData[a].totalSales)
+                .slice(0, 20); // Mostra solo le prime 20 province
+            
+            const salesData = provinces.map(province => provinceData[province].totalSales);
+            
+            if (provinces.length === 0) {
+                console.log('ERRORE: Nessuna provincia trovata per l\'Italia!');
+                return;
+            }
+            
+            // Distruggi il grafico esistente
+            if (provinceChart) {
+                provinceChart.destroy();
+            }
+            
+            // Crea il grafico delle province
+            const ctx = document.getElementById('provinceChart').getContext('2d');
+            provinceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: provinces,
+                    datasets: [{
+                        label: 'Vendite Totali (€)',
+                        data: salesData,
+                        backgroundColor: salesData.map((value, index) => {
+                            const hue = (index * 360 / salesData.length) % 360;
+                            return `hsla(${hue}, 70%, 60%, 0.8)`;
+                        }),
+                        borderColor: salesData.map((value, index) => {
+                            const hue = (index * 360 / salesData.length) % 360;
+                            return `hsla(${hue}, 70%, 50%, 1)`;
+                        }),
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Vendite per Provincia - Italia',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const province = context.label;
+                                    const data = provinceData[province];
+                                    const aov = data.orders > 0 ? (data.totalSales / data.orders).toFixed(2) : '0.00';
+                                    return [
+                                        `Vendite: €${data.totalSales.toLocaleString()}`,
+                                        `Ordini: ${data.orders}`,
+                                        `AOV: €${aov}`,
+                                        'Clicca per vedere le città'
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Vendite Totali (€)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Province'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const provinceName = provinces[index];
+                            selectedProvince = provinceName;
+                            document.getElementById('showCityBtn').style.display = 'inline-block';
+                            console.log('Provincia selezionata:', provinceName);
+                            
+                            // Apri automaticamente il grafico delle città
+                            createCityChart(provinceName);
+                            
+                            // Mostra la sezione del grafico delle città
+                            document.getElementById('cityChartContainer').style.display = 'block';
+                            cityChartVisible = true;
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createCityChart(provinceName) {
+            if (!provinceData[provinceName] || !provinceData[provinceName].cities) {
+                alert(`Nessun dato trovato per le città della provincia ${provinceName}`);
+                return;
+            }
+            
+            const cityData = provinceData[provinceName].cities;
+            
+            // Ordina le città per vendite totali
+            const cities = Object.keys(cityData)
+                .sort((a, b) => cityData[b].totalSales - cityData[a].totalSales)
+                .slice(0, 15); // Mostra solo le prime 15 città
+            
+            const salesData = cities.map(city => cityData[city].totalSales);
+            
+            if (cities.length === 0) {
+                alert(`Nessuna città trovata per la provincia ${provinceName}`);
+                return;
+            }
+            
+            // Distruggi il grafico esistente
+            if (cityChart) {
+                cityChart.destroy();
+            }
+            
+            // Crea il grafico delle città
+            const ctx = document.getElementById('cityChart').getContext('2d');
+            cityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cities,
+                    datasets: [{
+                        label: 'Vendite Totali (€)',
+                        data: salesData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Vendite per Città - ${provinceName}`,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const city = context.label;
+                                    const data = cityData[city];
+                                    const aov = data.orders > 0 ? (data.totalSales / data.orders).toFixed(2) : '0.00';
+                                    return [
+                                        `Vendite: €${data.totalSales.toLocaleString()}`,
+                                        `Ordini: ${data.orders}`,
+                                        `AOV: €${aov}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Vendite Totali (€)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Città'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+            
+        // Variabili globali per i grafici delle province e città
+        
+        
+
+
+
+
+
+        function createHourlyChart(dayName) {
+            // Mappa i giorni della settimana ai numeri
+            const dayMap = {
+                'Domenica': 0,
+                'Lunedì': 1,
+                'Martedì': 2,
+                'Mercoledì': 3,
+                'Giovedì': 4,
+                'Venerdì': 5,
+                'Sabato': 6
+            };
+            
+            const targetDay = dayMap[dayName];
+            
+            // Inizializza i dati per le 24 ore
+            const hourlyData = {};
+            for (let i = 0; i < 24; i++) {
+                hourlyData[i] = 0;
+            }
+            
+            // Filtra i dati per il giorno selezionato e raggruppa per ora
+            const datiFiltrati = filtraDati();
+            datiFiltrati.forEach(row => {
+                const dateStr = row['purchase-date'] || row['order-date'];
+                if (dateStr) {
+                    const date = new Date(dateStr);
+                    if (!isNaN(date.getTime()) && date.getDay() === targetDay) {
+                        const hour = date.getHours();
+                        const price = parseFloat(row['item-price']) || 0;
+                        hourlyData[hour] += price;
+                    }
+                }
+            });
+            
+            // Prepara i dati per il grafico
+            const labels = [];
+            const data = [];
+            
+            for (let i = 0; i < 24; i++) {
+                labels.push(`${i.toString().padStart(2, '0')}:00`);
+                data.push(hourlyData[i]);
+            }
+            
+            const ctx = document.getElementById('hourlyBarChart').getContext('2d');
+            if (hourlyBarChart) hourlyBarChart.destroy();
+            
+            hourlyBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Vendite (€)',
+                        data: data,
+                        backgroundColor: 'rgba(79, 172, 254, 0.8)',
+                        borderColor: 'rgba(79, 172, 254, 1)',
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Vendite: €${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#64748b',
+                                maxRotation: 45
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 800,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function updateGeographicalTable() {
+            const datiFiltrati = filtraDati();
+            const geoData = {};
+            datiFiltrati.forEach(row => {
+                const country = row['ship-country'] || 'N/A';
+                const state = row['ship-state'] || 'N/A';
+                const city = row['ship-city'] || 'N/A';
+                const key = `${country}-${state}-${city}`;
+                
+                const price = parseFloat(row['item-price']) || 0;
+                const quantity = parseInt(row['quantity-purchased']) || 0;
+                const total = price * quantity;
+                
+                if (!geoData[key]) {
+                    geoData[key] = {
+                        country,
+                        state,
+                        city,
+                        orders: 0,
+                        totalSales: 0
+                    };
+                }
+                
+                geoData[key].orders += 1;
+                geoData[key].totalSales += total;
+            });
+
+            const tbody = document.querySelector('#geographicalTable tbody');
+            tbody.innerHTML = '';
+            
+            Object.values(geoData)
+                .sort((a, b) => b.totalSales - a.totalSales)
+                .slice(0, 20)
+                .forEach(geo => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${geo.country}</td>
+                        <td>${geo.state}</td>
+                        <td>${geo.city}</td>
+                        <td>${geo.orders}</td>
+                        <td>€${geo.totalSales.toLocaleString()}</td>
+                        <td>€${(geo.totalSales / geo.orders).toFixed(2)}</td>
+                    `;
+                });
+        }
+
+        function updateKPIDashboard() {
+            const datiFiltrati = filtraDati();
+            const totalOrders = datiFiltrati.length;
+            const totalProducts = datiFiltrati.reduce((sum, row) => sum + (parseInt(row['quantity-purchased']) || 0), 0);
+            const uniqueCustomers = new Set(datiFiltrati.map(row => row['buyer-email'] || row['customer-id'])).size;
+            const conversionRate = totalOrders > 0 ? ((totalProducts / totalOrders) * 100).toFixed(1) : 0;
+            
+            document.getElementById('totalOrders').textContent = totalOrders.toLocaleString();
+            document.getElementById('totalProducts').textContent = totalProducts.toLocaleString();
+            document.getElementById('uniqueCustomers').textContent = uniqueCustomers.toLocaleString();
+            document.getElementById('conversionRate').textContent = conversionRate + '%';
+        }
+
+        // Modifica la funzione elaboraDati esistente per includere i nuovi grafici
+        const originalElaboraDati = elaboraDati;
+        elaboraDati = function() {
+            if (originalElaboraDati) {
+                originalElaboraDati();
+            }
+            createNewCharts();
+        };
+
+        // Funzionalità di ordinamento delle tabelle
+        function initTableSorting() {
+            document.querySelectorAll('.sortable-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const table = this.closest('table');
+                    const tbody = table.querySelector('tbody');
+                    const columnIndex = parseInt(this.dataset.column);
+                    const dataType = this.dataset.type;
+                    const currentDirection = this.dataset.direction || 'asc';
+                    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+                    
+                    // Reset all headers in this table
+                    table.querySelectorAll('.sortable-header').forEach(h => {
+                        h.dataset.direction = '';
+                        h.classList.remove('sorted-asc', 'sorted-desc');
+                    });
+                    
+                    // Set new direction
+                    this.dataset.direction = newDirection;
+                    this.classList.add(newDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+                    
+                    // Get all rows
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    
+                    // Sort rows
+                    rows.sort((a, b) => {
+                        const aValue = a.cells[columnIndex].textContent.trim();
+                        const bValue = b.cells[columnIndex].textContent.trim();
+                        
+                        let comparison = 0;
+                        
+                        if (dataType === 'number') {
+                            // Remove currency symbols and convert to number
+                            const aNum = parseFloat(aValue.replace(/[€,%]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
+                            const bNum = parseFloat(bValue.replace(/[€,%]/g, '').replace(/\./g, '').replace(',', '.')) || 0;
+                            comparison = aNum - bNum;
+                        } else {
+                            // Text comparison
+                            comparison = aValue.localeCompare(bValue, 'it', { numeric: true });
+                        }
+                        
+                        return newDirection === 'asc' ? comparison : -comparison;
+                    });
+                    
+                    // Clear tbody and append sorted rows
+                    tbody.innerHTML = '';
+                    rows.forEach(row => tbody.appendChild(row));
+                });
+            });
+        }
+        
+        // Initialize table sorting when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initTableSorting();
+        });
+        
+        // Re-initialize sorting after data is loaded
+        const originalElaboraDatiWithSorting = elaboraDati;
+        elaboraDati = function() {
+            if (originalElaboraDatiWithSorting) {
+                originalElaboraDatiWithSorting();
+            }
+            // Wait a bit for tables to be populated, then initialize sorting
+            setTimeout(() => {
+                initTableSorting();
+            }, 100);
+        };
+    </script>
+</body>
+</html>
