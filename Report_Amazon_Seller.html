@@ -1443,9 +1443,38 @@
                 <div class="card">
                     <div class="card-body">
                         <h5><i class="fas fa-upload me-2"></i>Carica il tuo file Excel</h5>
+                        
+                        <!-- Selezione modalità caricamento -->
+                        <div class="mb-3">
+                            <div class="btn-group w-100" role="group" aria-label="Modalità caricamento">
+                                <input type="radio" class="btn-check" name="uploadMode" id="manualUpload" value="manual" checked>
+                                <label class="btn btn-outline-primary" for="manualUpload">
+                                    <i class="fas fa-upload me-2"></i>Caricamento Manuale
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="uploadMode" id="repoSelect" value="repository">
+                                <label class="btn btn-outline-primary" for="repoSelect">
+                                    <i class="fab fa-github me-2"></i>Seleziona da Repository
+                                </label>
+                            </div>
+                        </div>
+                        
                         <div class="row align-items-end">
                             <div class="col-md-8">
-                                <input type="file" class="form-control" id="fileInput" accept=".xlsx, .xls, .csv">
+                                <!-- Caricamento manuale -->
+                                <div id="manualUploadSection">
+                                    <input type="file" class="form-control" id="fileInput" accept=".xlsx, .xls, .csv">
+                                </div>
+                                
+                                <!-- Selezione da repository -->
+                                <div id="repositorySelectSection" style="display: none;">
+                                    <select class="form-select" id="repoFileSelect">
+                                        <option value="">Seleziona un file Excel dalla repository...</option>
+                                    </select>
+                                    <small class="text-muted mt-1 d-block">
+                                        <i class="fab fa-github me-1"></i>File disponibili nella repository GitHub
+                                    </small>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <button class="btn btn-primary w-100" onclick="exportToPDF()">
@@ -1852,6 +1881,257 @@
                         currentSkuData[key] = row[key];
                     }
                 });
+        
+        // Gestione cambio modalità di caricamento
+        document.querySelectorAll('input[name="uploadMode"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const manualSection = document.getElementById('manualUploadSection');
+                const repoSection = document.getElementById('repositorySelectSection');
+                
+                if (this.value === 'manual') {
+                    manualSection.style.display = 'block';
+                    repoSection.style.display = 'none';
+                } else {
+                    manualSection.style.display = 'none';
+                    repoSection.style.display = 'block';
+                    loadRepositoryFiles();
+                }
+            });
+        });
+        
+        // Carica i file Excel disponibili nella repository
+        async function loadRepositoryFiles() {
+            const select = document.getElementById('repoFileSelect');
+            
+            try {
+                // Lista dei file Excel trovati nella repository
+                const excelFiles = [
+                    {
+                        name: 'Life120_Vendite.xlsx',
+                        path: '/Users/oddo/GitHub/reports/Report/Life120_Vendite.xlsx',
+                        size: '331 KB'
+                    }
+                ];
+                
+                // Pulisce le opzioni esistenti
+                select.innerHTML = '<option value="">Seleziona un file Excel dalla repository...</option>';
+                
+                // Aggiunge i file trovati
+                excelFiles.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file.path;
+                    option.textContent = `${file.name} (${file.size})`;
+                    select.appendChild(option);
+                });
+                
+                showToast(`Trovati ${excelFiles.length} file Excel nella repository`, 'success');
+                
+            } catch (error) {
+                console.error('Errore nel caricamento dei file dalla repository:', error);
+                showToast('Errore nel caricamento dei file dalla repository', 'error');
+            }
+        }
+        
+        // Gestione selezione file da repository
+        document.getElementById('repoFileSelect').addEventListener('change', function() {
+            const filePath = this.value;
+            if (filePath) {
+                loadFileFromRepository(filePath);
+            }
+        });
+        
+        // Carica file Excel dalla repository
+        async function loadFileFromRepository(filePath) {
+            try {
+                showToast('Caricamento file dalla repository...', 'info');
+                
+                // Simula il caricamento del file dalla repository
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error('File non trovato');
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, {defval: ''});
+                
+                console.log(`File caricato dalla repository: ${json.length} righe`);
+                
+                // Normalizza i dati come nel caricamento manuale
+                function normalizzaColonne(riga) {
+                    const mapping = {
+                        'amazon-order-id': 'order-id', 
+                        'purchase-date': 'order-date',
+                        'orderdate': 'order-date',
+                        'data-ordine': 'order-date',
+                        'product-id': 'sku',
+                        'prodotto': 'sku',
+                        'saleschannel': 'sales-channel',
+                        'canale': 'sales-channel',
+                        'orderstatus': 'order-status',
+                        'stato': 'order-status',
+                        'itemprice': 'item-price',
+                        'prezzo': 'item-price',
+                        'quantity': 'quantity-purchased', 
+                        'quantita': 'quantity-purchased',
+                        'shipcountry': 'ship-country',
+                        'paese-spedizione': 'ship-country',
+                        'country': 'ship-country',
+                        'paese': 'ship-country',
+                        'shipstate': 'ship-state',
+                        'stato-spedizione': 'ship-state',
+                        'state': 'ship-state',
+                        'regione': 'ship-state',
+                        'provincia': 'ship-state'
+                    };
+        
+        // Funzione per mostrare notifiche toast
+        function showToast(message, type = 'info') {
+            // Rimuove toast esistenti
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            // Crea il toast
+            const toast = document.createElement('div');
+            toast.className = `toast-notification toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <i class="fas ${getToastIcon(type)}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Aggiunge stili CSS se non esistono
+            if (!document.querySelector('#toast-styles')) {
+                const style = document.createElement('style');
+                style.id = 'toast-styles';
+                style.textContent = `
+                    .toast-notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--glass-bg);
+                        backdrop-filter: blur(20px);
+                        border: 1px solid var(--glass-border);
+                        border-radius: var(--border-radius);
+                        padding: 15px 20px;
+                        box-shadow: var(--shadow-lg);
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        min-width: 300px;
+                        max-width: 500px;
+                        animation: slideInRight 0.3s ease-out;
+                    }
+                    
+                    .toast-content {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        flex: 1;
+                    }
+                    
+                    .toast-success {
+                        border-left: 4px solid #10b981;
+                        color: #10b981;
+                    }
+                    
+                    .toast-error {
+                        border-left: 4px solid #ef4444;
+                        color: #ef4444;
+                    }
+                    
+                    .toast-info {
+                        border-left: 4px solid #3b82f6;
+                        color: #3b82f6;
+                    }
+                    
+                    .toast-close {
+                        background: none;
+                        border: none;
+                        color: inherit;
+                        cursor: pointer;
+                        padding: 5px;
+                        border-radius: 50%;
+                        transition: background-color 0.2s;
+                    }
+                    
+                    .toast-close:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                    }
+                    
+                    @keyframes slideInRight {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Aggiunge il toast al documento
+            document.body.appendChild(toast);
+            
+            // Rimuove automaticamente dopo 5 secondi
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.animation = 'slideInRight 0.3s ease-out reverse';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        function getToastIcon(type) {
+            switch (type) {
+                case 'success': return 'fa-check-circle';
+                case 'error': return 'fa-exclamation-circle';
+                case 'info': return 'fa-info-circle';
+                default: return 'fa-info-circle';
+            }
+        }
+                    const nuovaRiga = {};
+                    Object.keys(riga).forEach(k => {
+                        let chiave = k.trim().toLowerCase().replace(/\s|_/g, '-');
+                        chiave = mapping[chiave] || chiave;
+                        nuovaRiga[chiave] = typeof riga[k] === 'string' ? riga[k].trim() : riga[k];
+                    });
+                    return nuovaRiga;
+                }
+                
+                rawVendite = json.map(normalizzaColonne);
+                
+                datiVendite = rawVendite.filter(riga => {
+                    const status = riga['order-status'];
+                    const hasValidStatus = status && typeof status === 'string' && status.trim() !== '';
+                    const hasPrice = riga['item-price'] != null && riga['item-price'] !== '';
+                    const hasQuantity = riga['quantity-purchased'] != null && riga['quantity-purchased'] !== '';
+                    return hasValidStatus && hasPrice && hasQuantity;
+                });
+                
+                popolaFiltri();
+                elaboraDati();
+                
+                showToast('File caricato con successo dalla repository!', 'success');
+                
+            } catch (error) {
+                console.error('Errore nel caricamento del file:', error);
+                showToast('Errore nel caricamento del file dalla repository', 'error');
+            }
+        }
                 skuDataMap.set(sku, currentSkuData);
             });
 
