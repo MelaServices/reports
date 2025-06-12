@@ -500,6 +500,79 @@
             color: #e2e8f0;
         }
         
+        /* Miglioramenti per la leggibilità in modalità notturna */
+        [data-theme="dark"] .metric-value {
+            color: #ffffff !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        [data-theme="dark"] .metric-label {
+            color: #cbd5e0 !important;
+        }
+        
+        [data-theme="dark"] .card h5 {
+            color: #e2e8f0 !important;
+        }
+        
+        [data-theme="dark"] .subtitle {
+            color: #a0aec0 !important;
+        }
+        
+        [data-theme="dark"] h2 {
+            background: linear-gradient(135deg, #81e6d9 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        [data-theme="dark"] .table td {
+            color: #e2e8f0 !important;
+        }
+        
+        [data-theme="dark"] .table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.2) !important;
+        }
+        
+        [data-theme="dark"] .btn-secondary {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: #e2e8f0 !important;
+            border: 1px solid #4a5568;
+        }
+        
+        [data-theme="dark"] .btn-secondary:hover {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #ffffff !important;
+        }
+        
+        [data-theme="dark"] .badge {
+            background: #4a5568 !important;
+            color: #e2e8f0 !important;
+        }
+        
+        [data-theme="dark"] .badge.bg-success {
+            background: #38a169 !important;
+        }
+        
+        [data-theme="dark"] .badge.bg-info {
+            background: #3182ce !important;
+        }
+        
+        [data-theme="dark"] .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        [data-theme="dark"] .btn-outline-secondary {
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        
+        [data-theme="dark"] .btn-outline-secondary:hover {
+            background-color: #4a5568;
+            border-color: #4a5568;
+            color: #ffffff;
+        }
+        
         /* Progress Bar Animation */
         .progress-bar-container {
             width: 100%;
@@ -2096,6 +2169,46 @@
                 localStorage.setItem('theme', 'dark');
                 showToast('Tema scuro attivato', 'success');
             }
+            
+            // Aggiorna i colori dei grafici
+            updateChartsForTheme();
+        }
+        
+        function updateChartsForTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            // Aggiorna tutti i grafici esistenti
+            const charts = [top10SkuChart, amazonChannelsChart, orderStatusChart, dailySalesTrendChart, weeklyBarChart, hourlyBarChart, provinceChart, cityChart];
+            
+            charts.forEach(chart => {
+                if (chart && chart.options) {
+                    // Aggiorna colori delle scale
+                    if (chart.options.scales) {
+                        if (chart.options.scales.x && chart.options.scales.x.ticks) {
+                            chart.options.scales.x.ticks.color = textColor;
+                        }
+                        if (chart.options.scales.y && chart.options.scales.y.ticks) {
+                            chart.options.scales.y.ticks.color = textColor;
+                        }
+                        if (chart.options.scales.x && chart.options.scales.x.grid) {
+                            chart.options.scales.x.grid.color = gridColor;
+                        }
+                        if (chart.options.scales.y && chart.options.scales.y.grid) {
+                            chart.options.scales.y.grid.color = gridColor;
+                        }
+                    }
+                    
+                    // Aggiorna colori della legenda
+                    if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+                        chart.options.plugins.legend.labels.color = textColor;
+                    }
+                    
+                    // Aggiorna il grafico
+                    chart.update('none');
+                }
+            });
         }
 
         // Toast Notification Function
@@ -2145,6 +2258,11 @@
                 document.body.setAttribute('data-theme', 'dark');
                 themeIcon.className = 'fas fa-sun';
             }
+            
+            // Aggiorna i colori dei grafici dopo l'inizializzazione del tema
+            setTimeout(() => {
+                updateChartsForTheme();
+            }, 100);
             
             // Add floating action button
             const fab = document.createElement('button');
@@ -2236,6 +2354,10 @@
             const ctx = document.getElementById('top10SkuChart').getContext('2d');
             if (top10SkuChart) top10SkuChart.destroy();
             
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
             top10SkuChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -2259,10 +2381,22 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            grid: {
+                                color: gridColor
+                            },
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return '€' + value.toLocaleString();
                                 }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
                             }
                         }
                     }
@@ -2291,6 +2425,9 @@
             const ctx = document.getElementById('amazonChannelsChart').getContext('2d');
             if (amazonChannelsChart) amazonChannelsChart.destroy();
             
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
+            
             amazonChannelsChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -2311,7 +2448,10 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: textColor
+                            }
                         }
                     },
                     onClick: function(event, elements) {
@@ -2331,6 +2471,9 @@
 
             const ctx = document.getElementById('orderStatusChart').getContext('2d');
             if (orderStatusChart) orderStatusChart.destroy();
+            
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
             
             orderStatusChart = new Chart(ctx, {
                 type: 'pie',
@@ -2352,7 +2495,10 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: textColor
+                            }
                         }
                     },
                     onClick: function(event, elements) {
@@ -2387,6 +2533,10 @@
             const ctx = document.getElementById('dailySalesTrendChart').getContext('2d');
             if (dailySalesTrendChart) dailySalesTrendChart.destroy();
             
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
             dailySalesTrendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -2405,10 +2555,22 @@
                     scales: {
                         y: {
                             beginAtZero: true,
+                            grid: {
+                                color: gridColor
+                            },
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return '€' + value.toLocaleString();
                                 }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
                             }
                         }
                     }
@@ -2444,6 +2606,10 @@
 
             const ctx = document.getElementById('weeklyBarChart').getContext('2d');
             if (weeklyBarChart) weeklyBarChart.destroy();
+            
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#e2e8f0' : '#64748b';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
             weeklyBarChart = new Chart(ctx, {
                 type: 'bar',
@@ -2498,10 +2664,10 @@
                         y: {
                             beginAtZero: true,
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: gridColor
                             },
                             ticks: {
-                                color: '#64748b',
+                                color: textColor,
                                 callback: function(value) {
                                     return '€' + value.toLocaleString();
                                 }
@@ -2512,7 +2678,7 @@
                                 display: false
                             },
                             ticks: {
-                                color: '#64748b',
+                                color: textColor,
                                 maxRotation: 45
                             }
                         }
