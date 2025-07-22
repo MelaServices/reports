@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grifos: Infografica Strategica di Crescita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00449E;
+            line-height: 1;
+        }
+        .kpi-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #495057;
+            margin-top: 0.5rem;
+        }
+        .phase-card {
+            border-left: 4px solid #007BFF;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#00449E] mb-2">Piano di Crescita Strategico Grifos</h1>
+            <p class="text-lg text-gray-600">Trasformare acquirenti occasionali in clienti fedeli e ambasciatori del brand.</p>
+        </header>
+
+        <section id="diagnosis" class="mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-6 text-center">La Diagnosi: Il Problema Centrale e la Più Grande Opportunità</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center md:text-left">
+                        <p class="text-lg mb-4">Il nostro brand attrae clienti disposti a spendere cifre importanti, tuttavia il modello di business attuale presenta un basso tasso di ritenzione della clientela. La vera crescita non risiede nell'acquisire costantemente nuovi clienti, ma nel <strong class="text-[#007BFF]">trattenere e valorizzare quelli che abbiamo già</strong>.</p>
+                        <p class="text-lg">Solo una piccola frazione ritorna per un secondo acquisto, lasciando un enorme potenziale di fatturato latente e inesplorato.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="kpi-value">€48.9k</div>
+                            <div class="kpi-label">Fatturato Totale</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="kpi-value">€241</div>
+                            <div class="kpi-label">Valore Medio Cliente</div>
+                        </div>
+                        <div class="col-span-1 sm:col-span-2">
+                             <div class="chart-container h-64 md:h-72">
+                                <canvas id="loyaltyChart"></canvas>
+                            </div>
+                            <p class="text-center font-semibold text-gray-700 mt-2">Il Tasso di Fedeltà è la nostra metrica più critica.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vip-customers" class="mb-12">
+             <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-6 text-center">I Nostri Clienti VIP: Il Modello del Successo</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Questi clienti sono la prova che la fedeltà è possibile e incredibilmente preziosa. Il valore generato da un cliente fedele come Andrea Solmi supera di gran lunga anche il più alto acquisto singolo. Loro sono il modello da cui partire.</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead class="bg-[#00449E] text-white">
+                            <tr>
+                                <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Cliente</th>
+                                <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Ordini</th>
+                                <th class="text-right py-3 px-4 uppercase font-semibold text-sm">Spesa Totale (€)</th>
+                                <th class="text-center py-3 px-4 uppercase font-semibold text-sm">Paese</th>
+                                <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Profilo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            <tr class="border-b bg-blue-50">
+                                <td class="text-left py-3 px-4 font-bold">Andrea Solmi</td>
+                                <td class="text-center py-3 px-4 font-bold">7</td>
+                                <td class="text-right py-3 px-4 font-bold">1,997.80</td>
+                                <td class="text-center py-3 px-4">IT</td>
+                                <td class="text-left py-3 px-4 font-bold text-[#007BFF]">Il Cliente Campione</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="text-left py-3 px-4">Joseph Palencar</td>
+                                <td class="text-center py-3 px-4">2</td>
+                                <td class="text-right py-3 px-4">920.61</td>
+                                <td class="text-center py-3 px-4">US</td>
+                                <td class="text-left py-3 px-4">Fedele ad Alto Valore</td>
+                            </tr>
+                            <tr class="border-b bg-gray-50">
+                                <td class="text-left py-3 px-4">Indrave Mann</td>
+                                <td class="text-center py-3 px-4">2</td>
+                                <td class="text-right py-3 px-4">758.00</td>
+                                <td class="text-center py-3 px-4">IN</td>
+                                <td class="text-left py-3 px-4">Fedele Internazionale</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="text-left py-3 px-4">Rochelle Ghabra</td>
+                                <td class="text-center py-3 px-4">1</td>
+                                <td class="text-right py-3 px-4">738.42</td>
+                                <td class="text-center py-3 px-4">US</td>
+                                <td class="text-left py-3 px-4 text-orange-600">One-Shot ad Alto Potenziale</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="text-left py-3 px-4">Jerry Dockum</td>
+                                <td class="text-center py-3 px-4">1</td>
+                                <td class="text-right py-3 px-4">666.54</td>
+                                <td class="text-center py-3 px-4">US</td>
+                                <td class="text-left py-3 px-4 text-orange-600">One-Shot ad Alto Potenziale</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="action-plan" class="mb-12">
+            <h2 class="text-3xl font-bold text-[#00449E] mb-2 text-center">Piano d'Azione Strategico</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">L'obiettivo misurabile è aumentare il tasso di fedeltà dal 6.4% al 10% entro 12-18 mesi. Ecco come lo faremo.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-[#00449E] mb-4">Il Nostro Obiettivo di Crescita</h3>
+                    <p class="text-gray-700 mb-4">Passare da un modello reattivo, basato sull'acquisizione, a un modello proattivo e relazionale. Anche un piccolo incremento nel tasso di fidelizzazione avrà un impatto significativo sulla stabilità e prevedibilità del fatturato.</p>
+                </div>
+                <div class="chart-container h-64 md:h-72">
+                    <canvas id="goalChart"></canvas>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="phase-card bg-white rounded-lg shadow-lg p-6">
+                    <span class="inline-block bg-[#00449E] text-white text-sm font-bold px-3 py-1 rounded-full mb-3">FASE 1: Azione Immediata</span>
+                    <h3 class="text-2xl font-bold text-[#007BFF] mb-2">Programma "Ambasciatori Grifos"</h3>
+                    <p class="font-semibold text-gray-800">COSA: Contattare i 13 clienti fedeli e invitarli in un club esclusivo.</p>
+                    <p class="text-gray-600 mt-2">PERCHÉ: Riconoscere e premiare la loro lealtà per trasformarli in veri sostenitori del brand, incentivando il passaparola e ulteriori acquisti.</p>
+                </div>
+                
+                <div class="phase-card bg-white rounded-lg shadow-lg p-6">
+                    <span class="inline-block bg-[#00449E] text-white text-sm font-bold px-3 py-1 rounded-full mb-3">FASE 2: Campagna Strategica</span>
+                    <h3 class="text-2xl font-bold text-[#007BFF] mb-2">Riattivazione Clienti ad Alto Valore</h3>
+                    <p class="font-semibold text-gray-800">COSA: Creare un segmento di clienti "one-shot" con spesa > 300€ e lanciare una campagna email personalizzata.</p>
+                    <p class="text-gray-600 mt-2">PERCHÉ: Riattivare il potenziale di spesa latente dei clienti che hanno già dimostrato di amare i nostri prodotti, offrendo loro un motivo valido per tornare.</p>
+                </div>
+                
+                <div class="phase-card bg-white rounded-lg shadow-lg p-6">
+                    <span class="inline-block bg-[#00449E] text-white text-sm font-bold px-3 py-1 rounded-full mb-3">FASE 3: Tattica di Lungo Periodo</span>
+                    <h3 class="text-2xl font-bold text-[#007BFF] mb-2">Coltivare Tutti i Clienti</h3>
+                    <p class="font-semibold text-gray-800">COSA: Implementare una newsletter di valore e una sequenza di email automatiche post-acquisto.</p>
+                    <p class="text-gray-600 mt-2">PERCHÉ: Costruire una relazione che vada oltre la transazione, mantenendo il brand vivo nella mente dei clienti con contenuti utili e storie affascinanti sull'artigianato.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center mt-12 py-6 border-t">
+            <p class="text-gray-500">Infografica generata sulla base del Report Marketing Definitivo.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function wrapText(str) {
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            const maxLength = 16;
+
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).length > maxLength && currentLine.length > 0) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    if (currentLine.length === 0) {
+                        currentLine = word;
+                    } else {
+                        currentLine += ' ' + word;
+                    }
+                }
+            });
+            lines.push(currentLine);
+            return lines.length === 1 ? lines[0] : lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+        
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#495057',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: '#00449E',
+                    titleFont: {
+                        size: 16,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 14
+                    },
+                    padding: 12,
+                    cornerRadius: 4
+                }
+            }
+        };
+
+        const loyaltyData = {
+            labels: ['Clienti Nuovi (93.6%)', 'Clienti Fedeli (6.4%)'],
+            datasets: [{
+                label: 'Tasso di Fedeltà',
+                data: [190, 13],
+                backgroundColor: [
+                    '#BDE3FF',
+                    '#007BFF'
+                ],
+                borderColor: [
+                    '#BDE3FF',
+                    '#007BFF'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const loyaltyCtx = document.getElementById('loyaltyChart').getContext('2d');
+        new Chart(loyaltyCtx, {
+            type: 'doughnut',
+            data: loyaltyData,
+            options: {
+                ...commonChartOptions,
+                cutout: '60%',
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const goalData = {
+            labels: ['Tasso di Fedeltà'],
+            datasets: [
+                {
+                    label: 'Attuale',
+                    data: [6.4],
+                    backgroundColor: '#37AFFF',
+                    borderColor: '#37AFFF',
+                    borderWidth: 1,
+                    barPercentage: 0.5,
+                },
+                {
+                    label: 'Obiettivo',
+                    data: [10],
+                    backgroundColor: '#007BFF',
+                    borderColor: '#007BFF',
+                    borderWidth: 1,
+                    barPercentage: 0.5,
+                }
+            ]
+        };
+
+        const goalCtx = document.getElementById('goalChart').getContext('2d');
+        new Chart(goalCtx, {
+            type: 'bar',
+            data: goalData,
+            options: {
+                ...commonChartOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 12,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%'
+                            },
+                            color: '#495057'
+                        },
+                        grid: {
+                            color: '#e9ecef'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#495057'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
