@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentazione - Italian Corner Business Plan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Corner Logo" id="logo">
+        <h1>Documentazione del Modello Finanziario</h1>
+    </header>
+    <main style="display: block; width: 80%; margin: auto;">
+        <div id="documentation-content">
+            <p style="text-align: center;"><a href="index.html">&#8592; Torna alla Dashboard</a></p>
+
+            <h2>Panoramica del Progetto</h2>
+            <p>Questa dashboard web sostituisce il modello Excel per il business plan di "Italian Corner". L'obiettivo è fornire uno strumento interattivo e dinamico per simulare scenari finanziari, calcolare il fabbisogno di capitale e analizzare la profittabilità del progetto di espansione di 5 punti vendita in 24 mesi.</p>
+
+            <h2>Come Utilizzare la Dashboard</h2>
+            <p>La dashboard è divisa in due sezioni principali: i <strong>Parametri</strong> a sinistra e i <strong>Risultati</strong> a destra. Modificando un qualsiasi valore nel pannello dei parametri, l'intera dashboard (tabelle e grafici) si aggiornerà istantaneamente.</p>
+
+            <h2>Logica di Calcolo</h2>
+            <p>Di seguito è spiegata la logica dietro ogni sezione di calcolo.</p>
+
+            <fieldset>
+                <legend>Analisi Investimento per Singolo Punto Vendita</legend>
+                <p>Questa sezione calcola il costo totale per avviare un singolo negozio.</p>
+                <ul>
+                    <li><strong>CAPEX Fisso:</strong> È la somma dei costi di startup una tantum (allestimento, attrezzature, costi legali, etc.). Attualmente è un valore fisso di <strong>€ 83.695</strong>.</li>
+                    <li><strong>Capitale Operativo Iniziale:</strong> Rappresenta un fondo cassa iniziale per coprire i costi operativi prima che il negozio diventi profittevole. È calcolato dinamicamente come <strong>3 mesi di Costi Operativi (OPEX)</strong> a regime.</li>
+                    <li><strong>Investimento Totale per PdV:</strong> È la somma dei due valori precedenti e rappresenta il capitale necessario per lanciare un negozio.</li>
+                </ul>
+            </fieldset>
+
+            <fieldset>
+                <legend>Profit & Loss (P&L) Mensile</legend>
+                <p>Questa tabella mostra il conto economico per i primi 12 mesi di un singolo negozio, applicando una crescita progressiva (ramp-up).</p>
+                <ul>
+                    <li><strong>Ramp-up delle vendite:</strong> Per simulare un avvio realistico, i ricavi e i costi variabili non sono al 100% dal primo giorno, ma seguono questa curva:
+                        <ul>
+                            <li><strong>Mesi 1-2:</strong> 30% della capacità a regime.</li>
+                            <li><strong>Mesi 3-9:</strong> 60% della capacità a regime.</li>
+                            <li><strong>Mese 10 in poi:</strong> 100% della capacità a regime.</li>
+                        </ul>
+                    </li>
+                    <li><strong>EBITDA Margin %:</strong> Mostra la marginalità operativa (EBITDA / Ricavi Totali) per ogni mese, un indicatore chiave di profittabilità.</li>
+                </ul>
+            </fieldset>
+
+            <fieldset>
+                <legend>Cash Flow 24 Mesi (Espansione 5 PdV)</legend>
+                <p>Questa è la sezione più importante per la pianificazione finanziaria. Simula l'apertura sequenziale di 5 negozi nell'arco di 24 mesi per determinare il reale fabbisogno di capitale.</p>
+                <ul>
+                    <li><strong>Timeline Aperture:</strong> I negozi aprono ai mesi 1, 13, 15, 17 e 19.</li>
+                    <li><strong>Logica di calcolo:</strong> Per ogni mese, la tabella somma i ricavi, i costi e gli investimenti di tutti i negozi già aperti, ognuno con il suo specifico livello di ramp-up.</li>
+                    <li><strong>Cash Flow Cumulativo:</strong> È la riga più importante. Mostra la somma progressiva dei flussi di cassa mensili. Il suo punto più basso (il valore più negativo) rappresenta il <strong>Massimo Fabbisogno Finanziario</strong> del progetto, ovvero la quantità massima di capitale che bisogna avere a disposizione per finanziare l'intera espansione prima che diventi auto-sostenibile.</li>
+                </ul>
+            </fieldset>
+
+            <p style="text-align: center; margin-top: 2rem;"><a href="index.html">&#8592; Torna alla Dashboard</a></p>
+        </div>
+    </main>
+</body>
+</html>

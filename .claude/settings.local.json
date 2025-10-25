@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "WebFetch(domain:docs.google.com)",
+      "Bash(unzip:*)",
+      "Bash(sort:*)",
+      "Bash(cp:*)",
+      "Read(//Users/paolo/Desktop/**)",
+      "Read(//Users/paolo/Downloads/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

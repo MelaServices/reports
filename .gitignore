@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# Microsoft Office temporary files
+~$*.xlsx
+~$*.docx
+~$*.pptx
