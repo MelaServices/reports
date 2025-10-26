@@ -1,0 +1,107 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #7A9B5C; /* Verde oliva */
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+#logo {
+    max-height: 50px;
+    margin-right: 1rem;
+    vertical-align: middle;
+}
+
+main {
+    display: flex;
+    padding: 1rem;
+}
+
+#controls {
+    width: 30%;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-right: 1rem;
+}
+
+#results {
+    width: 70%;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.form-group input {
+    width: 95%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+thead th {
+    background-color: #E8DCC8; /* Beige */
+    color: #4A4138; /* Marrone */
+    padding: 0.5rem;
+    text-align: left;
+}
+
+tbody td, thead th {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.total-row td {
+    font-weight: bold;
+    background-color: #B83A38 !important; /* Rosso */
+    color: white;
+}
+
+.positive-value {
+    color: #28a745 !important; /* Verde */
+    font-weight: bold;
+}
+
+.negative-value {
+    color: #dc3545 !important; /* Rosso */
+    font-weight: bold;
+}
+
+.chart-container {
+    margin-bottom: 2rem;
+    max-width: 900px;
+}
+

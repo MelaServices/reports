@@ -6,14 +6,115 @@
     <title>Italian Corner - The Vision</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .slide-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 50px 60px;
+            box-sizing: border-box;
+        }
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .slide-header .eyebrow {
+            font-size: 16px;
+            font-weight: 600;
+            color: #E97451; /* Terracotta Accent */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .slide-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            color: #0d3b66; /* Deep Teal */
+            margin: 0;
+        }
+        .slide-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            align-items: center;
+        }
+        .text-column h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #0d3b66;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .text-column p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+        }
+        .text-column ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .text-column li {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            padding-left: 35px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .text-column li::before {
+            content: '✓';
+            color: #E97451;
+            font-size: 24px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        .image-column img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .full-width-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .full-width-section p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0d3b66;
+            margin: 0;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #ddd;
+            margin: 60px 0;
+        }
+        .infographic-column {
+             background-color: #f8f9fa;
+             padding: 30px;
+             border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" title="Torna alla Dashboard"><img src="logo ITALIAN LIFE STYLE.png" alt="Italian Corner Logo" id="logo"></a>
-        <h1>La Visione</h1>
-    </header>
 
     <!-- SLIDE 1: LA VISIONE - L'ITALIAN LIFE STYLE -->
     <div class="slide-container">
@@ -33,7 +134,7 @@
                 </ul>
             </div>
             <div class="image-column">
-                <img src="immagini/Design agent feedback (2).png" alt="Persona sorridente in un contesto urbano moderno">
+                <img src="https://images.unsplash.com/photo-1590523743849-41c1724080d5?q=80&w=1974&auto=format&fit=crop" alt="Persona sorridente in un contesto urbano moderno">
             </div>
         </div>
         <div class="full-width-section">
@@ -61,7 +162,7 @@
                 </ul>
             </div>
             <div class="image-column">
-                <img src="immagini/Design agent feedback (2).png" alt="Chef che prepara pasta fresca in una cucina tradizionale">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop" alt="Chef che prepara pasta fresca in una cucina tradizionale">
             </div>
         </div>
         <div class="full-width-section">
