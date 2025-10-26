@@ -65,19 +65,19 @@ h2 {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    font-size: 1rem; /* Aumentato da 0.9rem */
 }
 
 thead th {
     background-color: #E8DCC8; /* Beige */
     color: #4A4138; /* Marrone */
-    padding: 0.5rem;
+    padding: 0.75rem; /* Aumentato padding */
     text-align: left;
 }
 
 tbody td, thead th {
     border: 1px solid #ddd;
-    padding: 0.5rem;
+    padding: 0.75rem; /* Aumentato padding */
 }
 
 tbody tr:nth-child(even) {
@@ -91,12 +91,14 @@ tbody tr:nth-child(even) {
 }
 
 .positive-value {
-    color: #28a745 !important; /* Verde */
+    background-color: #28a745 !important; /* Verde */
+    color: white !important;
     font-weight: bold;
 }
 
 .negative-value {
-    color: #dc3545 !important; /* Rosso */
+    background-color: #dc3545 !important; /* Rosso */
+    color: white !important;
     font-weight: bold;
 }
 
