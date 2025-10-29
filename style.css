@@ -1,87 +1,27 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-header {
-    background-color: #7A9B5C; /* Verde oliva */
-    color: white;
-    padding: 1rem;
-    text-align: center;
+    background-color: #f8f9fa;
 }
 
 #logo {
     max-height: 50px;
-    margin-right: 1rem;
-    vertical-align: middle;
 }
 
-main {
-    display: flex;
-    padding: 1rem;
+.card-header {
+    background-color: #e9ecef;
+    border-bottom: 1px solid #dee2e6;
 }
 
-#controls {
-    width: 30%;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-right: 1rem;
+.accordion-button:not(.collapsed) {
+    color: #fff;
+    background-color: #198754; 
 }
 
-#results {
-    width: 70%;
-    padding: 1rem;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.5);
 }
 
-h2 {
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.25rem;
-}
-
-.form-group input {
-    width: 95%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.table-container {
-    overflow-x: auto;
-    margin-bottom: 2rem;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1rem; /* Aumentato da 0.9rem */
-}
-
-thead th {
-    background-color: #E8DCC8; /* Beige */
-    color: #4A4138; /* Marrone */
-    padding: 0.75rem; /* Aumentato padding */
-    text-align: left;
-}
-
-tbody td, thead th {
-    border: 1px solid #ddd;
-    padding: 0.75rem; /* Aumentato padding */
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
 }
 
 .total-row td {
@@ -103,7 +43,20 @@ tbody tr:nth-child(even) {
 }
 
 .chart-container {
-    margin-bottom: 2rem;
-    max-width: 900px;
+    position: relative;
+    margin: auto;
+    height: 40vh;
+    width: 80vw;
+    max-width: 100%;
 }
 
+/* Stili per i risultati */
+#summary-results, #roi-analysis, #roi-analysis-2 {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: .375rem; /* Corrisponde al border-radius di Bootstrap */
+}
+
+.fs-5 {
+    font-size: 1.25rem !important;
+}

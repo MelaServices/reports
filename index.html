@@ -4,147 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Italian Corner - Business Plan Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQCongVMdbEVEtIWWh9MxdtpDyCv1gGjC83H78HWMz3r7fkskM6s2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://lifeitalian.style/customtheme/lifeitalian.style/favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <header>
-        <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Corner Logo" id="logo">
-        <h1>Italian Corner - Business Plan Dashboard</h1>
-        <a href="presentazione.html" class="button">La Visione</a>
-    </header>
-    <main>
-        <div id="controls">
-            <h2>Parametri</h2>
-            <form id="params-form">
-                <fieldset>
-                    <legend>Volumi di Vendita (media giornaliera)</legend>
-                    <div class="form-group">
-                        <label for="piatti_store">Piatti in store (pz/giorno)</label>
-                        <input type="number" id="piatti_store" value="250">
-                    </div>
-                    <div class="form-group">
-                        <label for="piatti_delivery">Piatti delivery (pz/giorno)</label>
-                        <input type="number" id="piatti_delivery" value="120">
-                    </div>
-                    <div class="form-group">
-                        <label for="bibite">Bevande (bibite) (pz/giorno)</label>
-                        <input type="number" id="bibite" value="150">
-                    </div>
-                    <div class="form-group">
-                        <label for="acqua">Bevande (acqua) (pz/giorno)</label>
-                        <input type="number" id="acqua" value="250">
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Prezzi e Costi Unitari (€)</legend>
-                    <div class="form-group">
-                        <label for="prezzo_piatto">Prezzo Piatto (IVA Escl.)</label>
-                        <input type="number" id="prezzo_piatto" step="0.01" value="7.27">
-                    </div>
-                    <div class="form-group">
-                        <label for="costo_piatto">Costo Piatto</label>
-                        <input type="number" id="costo_piatto" step="0.01" value="3.50">
-                    </div>
-                    <div class="form-group">
-                        <label for="prezzo_bibita">Prezzo Bibita (IVA Escl.)</label>
-                        <input type="number" id="prezzo_bibita" step="0.01" value="2.27">
-                    </div>
-                    <div class="form-group">
-                        <label for="costo_bibita">Costo Bibita</label>
-                        <input type="number" id="costo_bibita" step="0.01" value="0.60">
-                    </div>
-                    <div class="form-group">
-                        <label for="prezzo_acqua">Prezzo Acqua (IVA Escl.)</label>
-                        <input type="number" id="prezzo_acqua" step="0.01" value="0.91">
-                    </div>
-                    <div class="form-group">
-                        <label for="costo_acqua">Costo Acqua</label>
-                        <input type="number" id="costo_acqua" step="0.01" value="0.15">
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Costi Operativi (OPEX Mensili in €)</legend>
-                    <div class="form-group">
-                        <label for="affitto">Affitto locale</label>
-                        <input type="number" id="affitto" value="3000">
-                    </div>
-                    <div class="form-group">
-                        <label for="numero_addetti">Numero addetti</label>
-                        <input type="number" id="numero_addetti" value="2">
-                    </div>
-                    <div class="form-group">
-                        <label for="costo_addetto">Costo lordo per addetto</label>
-                        <input type="number" id="costo_addetto" value="3400">
-                    </div>
-                    <div class="form-group">
-                        <label for="trasporti">Trasporti e logistica</label>
-                        <input type="number" id="trasporti" value="800">
-                    </div>
-                    <div class="form-group">
-                        <label for="utenze">Utenze</label>
-                        <input type="number" id="utenze" value="700">
-                    </div>
-                    <div class="form-group">
-                        <label for="marketing">Marketing e pubblicità</label>
-                        <input type="number" id="marketing" value="1500">
-                    </div>
-                    <div class="form-group">
-                        <label for="assicurazioni">Assicurazioni e varie</label>
-                        <input type="number" id="assicurazioni" value="500">
-                    </div>
-                     <div class="form-group">
-                        <label for="fideiussione_costo_annuo">Costo % Annuo Fideiussione</label>
-                        <input type="number" id="fideiussione_costo_annuo" step="0.001" value="0.015">
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Parametri Generali e Finanziari</legend>
-                    <div class="form-group">
-                        <label for="giorni_lavorativi">Giorni lavorativi al mese</label>
-                        <input type="number" id="giorni_lavorativi" value="30">
-                    </div>
-                    <div class="form-group">
-                        <label for="commissione_delivery">Commissione delivery (%)</label>
-                        <input type="number" id="commissione_delivery" step="0.01" value="0.28">
-                    </div>
-                    <div class="form-group">
-                        <label for="mesi_opex_capitale">Mesi di OPEX per Capitale Iniziale</label>
-                        <input type="number" id="mesi_opex_capitale" value="3">
-                    </div>
-                </fieldset>
-            </form>
+    <header class="bg-success text-white text-center py-3 shadow-sm">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Corner Logo" id="logo" class="me-3">
+                <h1 class="my-0">Italian Corner - Business Plan Dashboard</h1>
+            </div>
+            <a href="presentazione.html" class="btn btn-light mt-2">La Visione</a>
         </div>
-        <div id="results">
-            <h2>Risultati</h2>
-            <div id="summary-results"></div>
-            <div id="roi-analysis"></div>
+    </header>
+    <main class="container-fluid my-4">
+        <div class="row">
+            <div id="controls" class="col-lg-4 col-xl-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h2 class="mb-0 fs-5"><i class="bi bi-sliders me-2"></i>Parametri di Simulazione</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="params-form">
+                            <div class="accordion" id="accordion-params">
+                                <!-- Volumi di Vendita -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Volumi di Vendita (media giornaliera)
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion-params">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <label for="piatti_store" class="form-label">Piatti in store</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="bi bi-shop"></i></span>
+                                                    <input type="number" id="piatti_store" value="250" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="piatti_delivery" class="form-label">Piatti delivery</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="bi bi-truck"></i></span>
+                                                    <input type="number" id="piatti_delivery" value="120" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="bibite" class="form-label">Bevande (bibite)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="bi bi-cup-straw"></i></span>
+                                                    <input type="number" id="bibite" value="150" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="acqua" class="form-label">Bevande (acqua)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="bi bi-droplet-fill"></i></span>
+                                                    <input type="number" id="acqua" value="250" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <h3>Profit & Loss Mensile (Primi 12 Mesi con Ramp-Up)</h3>
-            <div class="table-container">
-                <table id="pnl-table"></table>
-            </div>
+                                <!-- Prezzi e Costi -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Prezzi e Costi Unitari (€)
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordion-params">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <label for="iva" class="form-label">Aliquota IVA (%)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="bi bi-percent"></i></span>
+                                                    <input type="number" id="iva" step="1" value="10" class="form-control">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <!-- Piatto -->
+                                            <div class="row mb-2">
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_piatto_ivato" class="form-label">Prezzo Piatto (IVA Incl.)</label>
+                                                    <input type="number" id="prezzo_piatto_ivato" step="0.01" value="8.00" class="form-control iva-input">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_piatto_netto" class="form-label">Netto IVA</label>
+                                                    <input type="number" id="prezzo_piatto_netto" step="0.01" readonly class="form-control netto-output bg-light">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="costo_piatto" class="form-label">Costo Piatto</label>
+                                                <input type="number" id="costo_piatto" step="0.01" value="3.50" class="form-control">
+                                            </div>
+                                            <hr>
+                                            <!-- Bibita -->
+                                            <div class="row mb-2">
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_bibita_ivato" class="form-label">Prezzo Bibita (IVA Incl.)</label>
+                                                    <input type="number" id="prezzo_bibita_ivato" step="0.01" value="2.50" class="form-control iva-input">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_bibita_netto" class="form-label">Netto IVA</label>
+                                                    <input type="number" id="prezzo_bibita_netto" step="0.01" readonly class="form-control netto-output bg-light">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="costo_bibita" class="form-label">Costo Bibita</label>
+                                                <input type="number" id="costo_bibita" step="0.01" value="0.60" class="form-control">
+                                            </div>
+                                            <hr>
+                                            <!-- Acqua -->
+                                            <div class="row mb-2">
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_acqua_ivato" class="form-label">Prezzo Acqua (IVA Incl.)</label>
+                                                    <input type="number" id="prezzo_acqua_ivato" step="0.01" value="1.00" class="form-control iva-input">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="prezzo_acqua_netto" class="form-label">Netto IVA</label>
+                                                    <input type="number" id="prezzo_acqua_netto" step="0.01" readonly class="form-control netto-output bg-light">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="costo_acqua" class="form-label">Costo Acqua</label>
+                                                <input type="number" id="costo_acqua" step="0.01" value="0.15" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <h3>Cash Flow 12 Mesi (Singolo PdV)</h3>
-            <div class="table-container">
-                <table id="cf12-table"></table>
-            </div>
-            <div class="chart-container">
-                <canvas id="cf12-chart"></canvas>
-            </div>
+                                <!-- Costi Operativi -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                            Costi Operativi (OPEX Mensili)
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordion-params">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <label for="affitto" class="form-label">Affitto locale</label>
+                                                <input type="number" id="affitto" value="3000" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="numero_addetti" class="form-label">Numero addetti</label>
+                                                <input type="number" id="numero_addetti" value="2" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="costo_addetto" class="form-label">Costo lordo per addetto</label>
+                                                <input type="number" id="costo_addetto" value="3400" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="trasporti" class="form-label">Trasporti e logistica</label>
+                                                <input type="number" id="trasporti" value="800" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="utenze" class="form-label">Utenze</label>
+                                                <input type="number" id="utenze" value="700" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="marketing" class="form-label">Marketing e pubblicità</label>
+                                                <input type="number" id="marketing" value="1500" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="assicurazioni" class="form-label">Assicurazioni e varie</label>
+                                                <input type="number" id="assicurazioni" value="500" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="fideiussione_costo_annuo" class="form-label">Costo % Annuo Fideiussione</label>
+                                                <input type="number" id="fideiussione_costo_annuo" step="0.001" value="0.015" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-            <h3>Cash Flow 24 Mesi (Espansione 5 PdV)</h3>
-            <div class="table-container">
-                <table id="cf24-table"></table>
+                                <!-- Parametri Generali -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFour">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                            Parametri Generali e Finanziari
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordion-params">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <label for="giorni_lavorativi" class="form-label">Giorni lavorativi al mese</label>
+                                                <input type="number" id="giorni_lavorativi" value="30" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="commissione_delivery" class="form-label">Commissione delivery (%)</label>
+                                                <input type="number" id="commissione_delivery" step="0.01" value="0.28" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="mesi_opex_capitale" class="form-label">Mesi di OPEX per Capitale Iniziale</label>
+                                                <input type="number" id="mesi_opex_capitale" value="3" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Campi nascosti -->
+                            <input type="hidden" id="prezzo_piatto" value="7.27">
+                            <input type="hidden" id="prezzo_bibita" value="2.27">
+                            <input type="hidden" id="prezzo_acqua" value="0.91">
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="chart-container">
-                <canvas id="cf24-chart"></canvas>
+            <div id="results" class="col-lg-8 col-xl-9">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h2 class="mb-0 fs-5"><i class="bi bi-bar-chart-line-fill me-2"></i>Risultati di Business</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="summary-results" class="mb-4 p-3 border rounded bg-light"></div>
+                        <div id="roi-analysis" class="mb-4 p-3 border rounded bg-light"></div>
+
+                        <h3 class="mt-4 fs-5">Profit & Loss Mensile (Primi 12 Mesi con Ramp-Up)</h3>
+                        <div class="table-responsive mb-4">
+                            <table id="pnl-table" class="table table-striped table-bordered table-hover"></table>
+                        </div>
+
+                        <h3 class="mt-4 fs-5">Cash Flow 12 Mesi (Singolo PdV)</h3>
+                        <div class="table-responsive mb-4">
+                            <table id="cf12-table" class="table table-striped table-bordered table-hover"></table>
+                        </div>
+                        <div class="chart-container mb-4">
+                            <canvas id="cf12-chart"></canvas>
+                        </div>
+
+                        <h3 class="mt-4 fs-5">Cash Flow 24 Mesi (Espansione 5 PdV)</h3>
+                        <div class="table-responsive mb-4">
+                            <table id="cf24-table" class="table table-striped table-bordered table-hover"></table>
+                        </div>
+                        <div class="chart-container mb-4">
+                            <canvas id="cf24-chart"></canvas>
+                        </div>
+                        <div id="roi-analysis-2" class="mb-4 p-3 border rounded bg-light"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js?v=1678886400"></script>
 </body>
 </html>
