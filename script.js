@@ -4,22 +4,60 @@ document.addEventListener('DOMContentLoaded', () => {
     let cf12ChartInstance, cf24ChartInstance;
 
     const inputs = document.querySelectorAll('#params-form input');
+    const ivaInputs = document.querySelectorAll('.iva-input, #iva');
+
+    // --- FUNZIONI DI CALCOLO IVA ---
+    function updateNettoPrices() {
+        const iva = parseFloat(document.getElementById('iva').value) / 100;
+
+        const prezzoPiattoIvato = parseFloat(document.getElementById('prezzo_piatto_ivato').value);
+        const prezzoBibitaIvato = parseFloat(document.getElementById('prezzo_bibita_ivato').value);
+        const prezzoAcquaIvato = parseFloat(document.getElementById('prezzo_acqua_ivato').value);
+
+        const prezzoPiattoNetto = prezzoPiattoIvato / (1 + iva);
+        const prezzoBibitaNetto = prezzoBibitaIvato / (1 + iva);
+        const prezzoAcquaNetto = prezzoAcquaIvato / (1 + iva);
+
+        document.getElementById('prezzo_piatto_netto').value = prezzoPiattoNetto.toFixed(2);
+        document.getElementById('prezzo_bibita_netto').value = prezzoBibitaNetto.toFixed(2);
+        document.getElementById('prezzo_acqua_netto').value = prezzoAcquaNetto.toFixed(2);
+
+        // Aggiorna i campi nascosti per la logica di calcolo principale
+        document.getElementById('prezzo_piatto').value = prezzoPiattoNetto.toFixed(2);
+        document.getElementById('prezzo_bibita').value = prezzoBibitaNetto.toFixed(2);
+        document.getElementById('prezzo_acqua').value = prezzoAcquaNetto.toFixed(2);
+    }
+
+
+    // --- EVENT LISTENERS ---
     inputs.forEach(input => {
         input.addEventListener('change', updateDashboard);
     });
+
+    ivaInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            updateNettoPrices();
+            updateDashboard(); // Ricalcola tutto dopo l'aggiornamento dei prezzi
+        });
+    });
+
 
     const formatter = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
     const percentFormatter = new Intl.NumberFormat('it-IT', { style: 'percent', minimumFractionDigits: 1 });
 
     function getParams() {
         const params = {};
-        inputs.forEach(input => {
-            params[input.id] = parseFloat(input.value);
+        const allInputs = document.querySelectorAll('#params-form input');
+        allInputs.forEach(input => {
+            // Ignora i campi di output dei prezzi netti per evitare di leggerli come parametri
+            if (!input.id.endsWith('_netto')) {
+                 params[input.id] = parseFloat(input.value);
+            }
         });
         return params;
     }
 
-    // --- FUNZIONI DI CALCOLO ---
+    // --- FUNZIONI DI CALCOLO BUSINESS LOGIC (invariate) ---
 
     function calculatePnl(params, regime) {
         const pnlData = { headers: ['Voce'], rows: {} };
@@ -55,12 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateFinancials(params) {
         const ricavi_piatti_delivery_100 = params.piatti_delivery * params.giorni_lavorativi * params.prezzo_piatto;
-        const ricavi_totali_100 = (params.piatti_store + params.piatti_delivery) * params.giorni_lavorativi * params.prezzo_piatto + 
-                                  params.bibite * params.giorni_lavorativi * params.prezzo_bibita + 
+        const ricavi_totali_100 = (params.piatti_store + params.piatti_delivery) * params.giorni_lavorativi * params.prezzo_piatto +
+                                  params.bibite * params.giorni_lavorativi * params.prezzo_bibita +
                                   params.acqua * params.giorni_lavorativi * params.prezzo_acqua;
 
-        const cogs_totali_100 = ((params.piatti_store + params.piatti_delivery) * params.giorni_lavorativi * params.costo_piatto) + 
-                                (params.bibite * params.giorni_lavorativi * params.costo_bibita) + 
+        const cogs_totali_100 = ((params.piatti_store + params.piatti_delivery) * params.giorni_lavorativi * params.costo_piatto) +
+                                (params.bibite * params.giorni_lavorativi * params.costo_bibita) +
                                 (params.acqua * params.giorni_lavorativi * params.costo_acqua);
 
         const opex_fisso_100 = params.affitto + (params.numero_addetti * params.costo_addetto) + params.trasporti + params.utenze + params.marketing + params.assicurazioni + (params.affitto * 12 * params.fideiussione_costo_annuo / 12);
@@ -124,7 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return 1.0;
         };
 
-        const consolidated = { ricavi: Array(24).fill(0), cogs: Array(24).fill(0), opex: Array(24).fill(0), investimenti: Array(24).fill(0), cf_mensile: Array(24).fill(0), cf_cumulativo: Array(24).fill(0) };
+        const consolidated = { 
+            ricavi: Array(24).fill(0), 
+            cogs: Array(24).fill(0), 
+            opex: Array(24).fill(0), 
+            ebitda: Array(24).fill(0),
+            ebitda_margin: Array(24).fill(0),
+            investimenti: Array(24).fill(0), 
+            cf_mensile: Array(24).fill(0), 
+            cf_cumulativo: Array(24).fill(0) 
+        };
 
         for (let mese = 1; mese <= 24; mese++) {
             cf24Data.headers.push(`M${mese}`);
@@ -139,21 +186,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             consolidated.investimenti[mese - 1] = investimenti_mese_consolidato;
+            
+            // Calcolo EBITDA mensile consolidato
+            const ebitda_mese = consolidated.ricavi[mese - 1] - consolidated.cogs[mese - 1] - consolidated.opex[mese - 1];
+            consolidated.ebitda[mese - 1] = ebitda_mese;
+            consolidated.ebitda_margin[mese - 1] = consolidated.ricavi[mese - 1] === 0 ? 0 : ebitda_mese / consolidated.ricavi[mese - 1];
         }
 
         let cumulativeCf = 0;
         for (let mese = 1; mese <= 24; mese++) {
-            const cf_mese = consolidated.ricavi[mese - 1] - consolidated.cogs[mese - 1] - consolidated.opex[mese - 1] - consolidated.investimenti[mese - 1];
+            const cf_mese = consolidated.ebitda[mese - 1] - consolidated.investimenti[mese - 1];
             cumulativeCf += cf_mese;
             consolidated.cf_mensile[mese - 1] = cf_mese;
             consolidated.cf_cumulativo[mese - 1] = cumulativeCf;
         }
         
-        cf24Data.rows['Investimenti Totali'] = [{value: 'Investimenti Totali'}, ...consolidated.investimenti.map(v => ({value: -v, description: 'Investimento per nuove aperture nel mese'}))];
         cf24Data.rows['Ricavi Totali'] = [{value: 'Ricavi Totali'}, ...consolidated.ricavi.map(v => ({value: v, description: 'Ricavi consolidati di tutti i PdV attivi'}))];
         cf24Data.rows['COGS Totali'] = [{value: 'COGS Totali'}, ...consolidated.cogs.map(v => ({value: v, description: 'COGS consolidati di tutti i PdV attivi'}))];
         cf24Data.rows['OPEX Totali'] = [{value: 'OPEX Totali'}, ...consolidated.opex.map(v => ({value: v, description: 'OPEX consolidati di tutti i PdV attivi'}))];
-        cf24Data.rows['Cash Flow Mensile'] = [{value: 'Cash Flow Mensile'}, ...consolidated.cf_mensile.map(v => ({value: v, description: 'Flusso di cassa netto del mese'}))];
+        cf24Data.rows['EBITDA'] = [{value: 'EBITDA'}, ...consolidated.ebitda.map(v => ({value: v, description: 'Ricavi - COGS - OPEX'}))];
+        cf24Data.rows['EBITDA Margin %'] = [{value: 'EBITDA Margin %'}, ...consolidated.ebitda_margin.map(v => ({value: v, type: 'percent', description: 'EBITDA / Ricavi'}))];
+        cf24Data.rows['Investimenti Totali'] = [{value: 'Investimenti Totali'}, ...consolidated.investimenti.map(v => ({value: -v, description: 'Investimento per nuove aperture nel mese'}))];
+        cf24Data.rows['Cash Flow Mensile'] = [{value: 'Cash Flow Mensile'}, ...consolidated.cf_mensile.map(v => ({value: v, description: 'EBITDA - Investimenti'}))];
         cf24Data.rows['Cash Flow Cumulativo'] = [{value: 'Cash Flow Cumulativo'}, ...consolidated.cf_cumulativo.map(v => ({value: v, description: 'Flusso di cassa cumulativo progressivo'}))];
 
         return cf24Data;
@@ -219,8 +273,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('roi-analysis');
         container.innerHTML = `
             <h3>Analisi Ritorno sull'Investimento (Singolo PdV)</h3>
-            <p title="Mesi necessari per recuperare l'investimento totale. Formula: Investimento Totale / EBITDA Mensile Medio"><strong>Payback Period:</strong> ${roi.payback_period.toFixed(1)} mesi</p>
+            <p title="Mesi necessari per recuperare l investimento totale. Formula: Investimento Totale / EBITDA Mensile Medio"><strong>Payback Period:</strong> ${roi.payback_period.toFixed(1)} mesi</p>
             <p title="Ritorno percentuale sul capitale investito nel primo anno. Formula: (EBITDA Annuale / Investimento Totale) * 100"><strong>ROI a 1 Anno:</strong> ${percentFormatter.format(roi.roi_anno_1)}</p>
+        `;
+    }
+
+    function calculateAndRenderRoi2(pnl, cf24Data, investimento) {
+        const container = document.getElementById('roi-analysis-2');
+
+        // ROI 12 mesi
+        const ebitda12Mesi = pnl.rows['EBITDA'].slice(1).reduce((acc, cell) => acc + cell.value, 0);
+        const investimento12Mesi = investimento.investimento_totale_singolo_pdv;
+        const roi12Mesi = investimento12Mesi > 0 ? ebitda12Mesi / investimento12Mesi : 0;
+
+        // ROI 24 mesi
+        const ebitda24Mesi = cf24Data.rows['EBITDA'].slice(1).reduce((acc, cell) => acc + cell.value, 0);
+        const investimento24Mesi = cf24Data.rows['Investimenti Totali'].slice(1).reduce((acc, cell) => acc - cell.value, 0); // I valori sono negativi
+        const roi24Mesi = investimento24Mesi > 0 ? ebitda24Mesi / investimento24Mesi : 0;
+
+        container.innerHTML = `
+            <h3>Analisi Utile vs Investimento Cumulato</h3>
+            <p><strong>Utile % su Investimento (12 Mesi):</strong> ${percentFormatter.format(roi12Mesi)}</p>
+            <p><strong>Utile % su Investimento (24 Mesi):</strong> ${percentFormatter.format(roi24Mesi)}</p>
         `;
     }
 
@@ -228,11 +302,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cf12ChartInstance) cf12ChartInstance.destroy();
         if (cf24ChartInstance) cf24ChartInstance.destroy();
 
+        const positiveColor = '#28a745';
+        const negativeColor = '#dc3545';
+        const positiveColorArea = 'rgba(40, 167, 69, 0.1)';
+        const negativeColorArea = 'rgba(220, 53, 69, 0.1)';
+
         const cf12Ctx = document.getElementById('cf12-chart').getContext('2d');
-        cf12ChartInstance = new Chart(cf12Ctx, { type: 'line', data: { labels: cf12Data.headers.slice(1), datasets: [{ label: 'Cash Flow Cumulativo 12 Mesi', data: cf12Data.rows['Cash Flow Cumulativo'].slice(1).map(c => c.value), borderColor: '#7A9B5C', backgroundColor: 'rgba(122, 155, 92, 0.1)', fill: true, tension: 0.1 }] } });
+        cf12ChartInstance = new Chart(cf12Ctx, { 
+            type: 'line', 
+            data: { 
+                labels: cf12Data.headers.slice(1), 
+                datasets: [{ 
+                    label: 'Cash Flow Cumulativo 12 Mesi', 
+                    data: cf12Data.rows['Cash Flow Cumulativo'].slice(1).map(c => c.value), 
+                    fill: true, 
+                    tension: 0.1,
+                    segment: {
+                        borderColor: ctx => ctx.p0.raw < 0 ? negativeColor : positiveColor,
+                        backgroundColor: ctx => ctx.p0.raw < 0 ? negativeColorArea : positiveColorArea,
+                    }
+                }] 
+            } 
+        });
 
         const cf24Ctx = document.getElementById('cf24-chart').getContext('2d');
-        cf24ChartInstance = new Chart(cf24Ctx, { type: 'line', data: { labels: cf24Data.headers.slice(1), datasets: [{ label: 'Cash Flow Cumulativo 24 Mesi', data: cf24Data.rows['Cash Flow Cumulativo'].slice(1).map(c => c.value), borderColor: '#B83A38', backgroundColor: 'rgba(184, 58, 56, 0.1)', fill: true, tension: 0.1 }] } });
+        cf24ChartInstance = new Chart(cf24Ctx, { 
+            type: 'line', 
+            data: { 
+                labels: cf24Data.headers.slice(1), 
+                datasets: [{ 
+                    label: 'Cash Flow Cumulativo 24 Mesi', 
+                    data: cf24Data.rows['Cash Flow Cumulativo'].slice(1).map(c => c.value), 
+                    fill: true, 
+                    tension: 0.1,
+                    segment: {
+                        borderColor: ctx => ctx.p0.raw < 0 ? negativeColor : positiveColor,
+                        backgroundColor: ctx => ctx.p0.raw < 0 ? negativeColorArea : positiveColorArea,
+                    }
+                }] 
+            } 
+        });
     }
 
     function updateDashboard() {
@@ -248,10 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable('cf12-table', cf12Data, key => key.includes('Cumulativo'));
 
         const cf24Data = calculateCf24(params, financials.regime, financials.investimento);
-        renderTable('cf24-table', cf24Data, key => key.includes('Cumulativo'));
+        renderTable('cf24-table', cf24Data, key => key.includes('EBITDA') || key.includes('Cumulativo'));
+
+        calculateAndRenderRoi2(financials.pnl, cf24Data, financials.investimento);
 
         renderCharts(cf12Data, cf24Data);
     }
 
-    updateDashboard();
+    // --- INIZIALIZZAZIONE ---
+    updateNettoPrices(); // Calcola i prezzi netti iniziali al caricamento
+    updateDashboard(); // Esegui il calcolo iniziale del dashboard
 });
