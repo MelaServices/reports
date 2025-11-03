@@ -293,9 +293,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.innerHTML = `
             <h3>Analisi Utile vs Investimento Cumulato</h3>
-            <p><strong>Utile % su Investimento (12 Mesi):</strong> ${percentFormatter.format(roi12Mesi)}</p>
-            <p><strong>Utile % su Investimento (24 Mesi):</strong> ${percentFormatter.format(roi24Mesi)}</p>
+            <p title="Rapporto tra l'EBITDA totale dei primi 12 mesi e l'investimento iniziale per un singolo punto vendita. Formula: (EBITDA 12 Mesi / Investimento Iniziale) * 100"><strong>Utile % su Investimento (12 Mesi):</strong> ${percentFormatter.format(roi12Mesi)}</p>
+            <p title="Rapporto tra l'EBITDA totale dei 24 mesi (considerando l'espansione a 5 punti vendita) e l'investimento totale cumulato per tutti i punti vendita. Formula: (EBITDA 24 Mesi / Investimento Totale 24 Mesi) * 100"><strong>Utile % su Investimento (24 Mesi):</strong> ${percentFormatter.format(roi24Mesi)}</p>
         `;
+    }
+
+    function calculateAndRender5pvAnalysis(cf24Data) {
+        const investmentContainer = document.getElementById('investment-analysis-5pv');
+        const roiContainer = document.getElementById('roi-analysis-5pv');
+
+        const cumulativeCashFlow = cf24Data.rows['Cash Flow Cumulativo'].slice(1).map(c => c.value);
+
+        const maxInvestment = Math.min(...cumulativeCashFlow);
+
+        let paybackMonth = -1;
+        for (let i = 0; i < cumulativeCashFlow.length; i++) {
+            if (cumulativeCashFlow[i] >= 0) {
+                paybackMonth = i + 1;
+                break;
+            }
+        }
+
+        investmentContainer.innerHTML = `
+            <p title="L'importo massimo di capitale necessario per finanziare l'espansione a 5 punti vendita, considerando il reinvestimento di tutti i flussi di cassa. Formula: min(Cash Flow Cumulativo dei 24 mesi)"><strong>Massimo Investimento Necessario:</strong> ${formatter.format(Math.abs(maxInvestment))}</p>
+        `;
+
+        if (paybackMonth !== -1) {
+            roiContainer.innerHTML = `
+                <p title="Il tempo necessario affinché il flusso di cassa cumulativo diventi positivo, indicando che l'investimento iniziale è stato completamente recuperato. Formula: primo mese in cui il 'Cash Flow Cumulativo' >= 0"><strong>Tempo di Ritorno dell'Investimento:</strong> ${paybackMonth} mesi</p>
+            `;
+        } else {
+            roiContainer.innerHTML = `
+                <p title="L'investimento non viene recuperato entro il periodo di analisi di 24 mesi."><strong>Tempo di Ritorno dell'Investimento:</strong> L'investimento non viene recuperato entro 24 mesi.</p>
+            `;
+        }
     }
 
     function renderCharts(cf12Data, cf24Data) {
@@ -360,6 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable('cf24-table', cf24Data, key => key.includes('EBITDA') || key.includes('Cumulativo'));
 
         calculateAndRenderRoi2(financials.pnl, cf24Data, financials.investimento);
+
+        calculateAndRender5pvAnalysis(cf24Data);
 
         renderCharts(cf12Data, cf24Data);
     }

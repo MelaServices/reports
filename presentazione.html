@@ -8,135 +8,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 40px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        #logo {
-            max-height: 50px;
-        }
-        header a.back-link {
-            font-weight: 600;
-            color: #0d3b66;
-            text-decoration: none;
-            font-size: 16px;
-        }
-        .slide-container {
-            max-width: 1100px;
-            margin: 30px auto;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 50px 60px;
-            box-sizing: border-box;
-        }
-        .slide-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .slide-header .eyebrow {
-            font-size: 16px;
-            font-weight: 600;
-            color: #E97451; /* Terracotta Accent */
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-        .slide-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            color: #0d3b66; /* Deep Teal */
-            margin: 0;
-        }
-        .slide-content {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
-            align-items: center;
-        }
-        .text-column h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            color: #0d3b66;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        .text-column p {
-            font-size: 16px;
-            line-height: 1.7;
-            color: #555;
-        }
-        .text-column ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-        }
-        .text-column li {
-            font-size: 17px;
-            font-weight: 600;
-            color: #333;
-            padding-left: 35px;
-            position: relative;
-            margin-bottom: 15px;
-        }
-        .text-column li::before {
-            content: '✓';
-            color: #E97451;
-            font-size: 24px;
-            position: absolute;
-            left: 0;
-            top: -2px;
-        }
-        .image-column img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .full-width-section {
-            grid-column: 1 / -1;
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-        .full-width-section p {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0d3b66;
-            margin: 0;
-        }
-        hr {
-            border: 0;
-            height: 1px;
-            background-color: #ddd;
-            margin: 60px 0;
-        }
-        .infographic-column {
-             background-color: #f8f9fa;
-             padding: 30px;
-             border-radius: 8px;
-        }
+        body { font-family: 'Montserrat', sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 40px; }
+        .slide-container { max-width: 1100px; margin: 30px auto; background-color: #ffffff; border: 1px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 50px 60px; box-sizing: border-box; }
+        .slide-header { text-align: center; margin-bottom: 40px; }
+        .slide-header .eyebrow { font-size: 16px; font-weight: 600; color: #E97451; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .slide-header h1 { font-family: 'Playfair Display', serif; font-size: 48px; color: #0d3b66; margin: 0; }
+        .slide-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; align-items: center; }
+        .text-column h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: #0d3b66; margin-top: 0; margin-bottom: 20px; }
+        .text-column p { font-size: 16px; line-height: 1.7; color: #555; }
+        .text-column ul { list-style: none; padding: 0; margin-top: 20px; }
+        .text-column li { font-size: 17px; font-weight: 600; color: #333; padding-left: 35px; position: relative; margin-bottom: 15px; }
+        .text-column li::before { content: '✓'; color: #E97451; font-size: 24px; position: absolute; left: 0; top: -2px; }
+        .image-column img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .full-width-section { grid-column: 1 / -1; text-align: center; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; }
+        .full-width-section p { font-size: 18px; font-weight: 600; color: #0d3b66; margin: 0; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: center;}
+        .kpi-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-bottom: 4px solid #0d3b66; padding: 20px; border-radius: 8px; }
+        .kpi-box .label { font-size: 14px; color: #6c757d; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .kpi-box .value { font-size: 36px; font-weight: 700; color: #0d3b66; }
+        .note { font-size: 14px; color: #495057; margin-top: 20px; line-height: 1.6; padding: 15px; background-color: #f8f9fa; border-radius: 4px; border-left: 4px solid #E97451;}
+        hr { border: 0; height: 1px; background-color: #ddd; margin: 60px 0; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" title="Torna alla Home"><img src="logo ITALIAN LIFE STYLE.png" alt="Italian Life Style Logo" id="logo"></a>
-        <a href="index.html" class="back-link">Torna alla Home</a>
+    <header style="background-color: #0d3b66; padding: 10px 40px; text-align: center;">
+        <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Life Style Logo" style="max-height: 70px;">
     </header>
 
     <!-- SLIDE 1: LA VISIONE - L'ITALIAN LIFE STYLE -->
@@ -149,11 +46,12 @@
             <div class="text-column">
                 <h2>Gusto e benessere, finalmente accessibili.</h2>
                 <p>L'Italian Life Style è un equilibrio perfetto di piacere e salute, qualità e semplicità. Un ideale desiderato in tutto il mondo, ma quasi impossibile da integrare nella vita frenetica di oggi.</p>
-                <p>La nostra missione è sbloccare questo stile di vita, rendendolo una scelta quotidiana, non un'eccezione del weekend.</p>
+                <p>La nostra missione è sbloccare questo stile di vita, rendendolo una scelta quotidiana, non un'eccezione del weekend. Con i nostri prodotti, puoi godere del vero gusto italiano, mantenendo un regime alimentare a basso contenuto di carboidrati e supportando uno stile di vita ketogenico, in linea con i principi dell'Italian Life Style.</p>
                 <ul>
                     <li>Gusto & Piacere Autentico</li>
-                    <li>Benessere & Energia</li>
+                    <li>Benessere & Energia (Keto & Low Carb)</li>
                     <li>Qualità & Semplicità</li>
+                    <li>Italian Life Style</li>
                 </ul>
             </div>
             <div class="image-column">
@@ -176,7 +74,7 @@
         <div class="slide-content">
             <div class="text-column">
                 <h2>La Qualità che Amiamo, i Limiti che Odiamo.</h2>
-                <p>Il cibo "Made in Italy" è sinonimo di eccellenza, ma la sua qualità è legata a un modello lento, rigido e incompatibile con le esigenze moderne. Richiede tempo, programmazione e spesso ci costringe a compromessi.</p>
+                <p>Il cibo "Made in Italy" è sinonimo di eccellenza, ma la sua qualità è legata a un modello lento, rigido e incompatibile con le esigenze moderne. Richiede tempo, programmazione e spesso ci costringe a compromessi, rendendo difficile l'adozione di un vero Italian Life Style basato su benessere e alimentazione consapevole, come i prodotti ketogenici e a basso contenuto di carboidrati.</p>
                 <p>Questo crea un enorme vuoto nel mercato: milioni di persone che desiderano mangiare bene ma non hanno il tempo per farlo.</p>
                 <ul>
                     <li>Lento e Inconveniente</li>
@@ -214,6 +112,7 @@
                     <li>Zero Sprechi Alimentari</li>
                     <li>Scalabilità Globale Immediata</li>
                     <li>Qualità Costante e Garantita</li>
+                    <li>Supporta l'Italian Life Style: Keto & Low Carb Friendly</li>
                 </ul>
             </div>
         </div>
