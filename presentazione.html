@@ -3,123 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Italian Corner - The Vision</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 40px; }
-        .slide-container { max-width: 1100px; margin: 30px auto; background-color: #ffffff; border: 1px solid #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 50px 60px; box-sizing: border-box; }
-        .slide-header { text-align: center; margin-bottom: 40px; }
-        .slide-header .eyebrow { font-size: 16px; font-weight: 600; color: #E97451; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-        .slide-header h1 { font-family: 'Playfair Display', serif; font-size: 48px; color: #0d3b66; margin: 0; }
-        .slide-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; align-items: center; }
-        .text-column h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: #0d3b66; margin-top: 0; margin-bottom: 20px; }
-        .text-column p { font-size: 16px; line-height: 1.7; color: #555; }
-        .text-column ul { list-style: none; padding: 0; margin-top: 20px; }
-        .text-column li { font-size: 17px; font-weight: 600; color: #333; padding-left: 35px; position: relative; margin-bottom: 15px; }
-        .text-column li::before { content: '✓'; color: #E97451; font-size: 24px; position: absolute; left: 0; top: -2px; }
-        .image-column img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .full-width-section { grid-column: 1 / -1; text-align: center; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; }
-        .full-width-section p { font-size: 18px; font-weight: 600; color: #0d3b66; margin: 0; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: center;}
-        .kpi-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-bottom: 4px solid #0d3b66; padding: 20px; border-radius: 8px; }
-        .kpi-box .label { font-size: 14px; color: #6c757d; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .kpi-box .value { font-size: 36px; font-weight: 700; color: #0d3b66; }
-        .note { font-size: 14px; color: #495057; margin-top: 20px; line-height: 1.6; padding: 15px; background-color: #f8f9fa; border-radius: 4px; border-left: 4px solid #E97451;}
-        hr { border: 0; height: 1px; background-color: #ddd; margin: 60px 0; }
-    </style>
+    <title>Italian Corner - La Visione</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQCongVMdbEVEtIWWh9MxdtpDyCv1gGjC83H78HWMz3r7fkskM6s2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://lifeitalian.style/customtheme/lifeitalian.style/favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
-
-    <header style="background-color: #0d3b66; padding: 10px 40px; text-align: center;">
-        <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Life Style Logo" style="max-height: 70px;">
+    <header class="bg-success text-white text-center py-3 shadow-sm">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-center">
+                <img src="logo ITALIAN LIFE STYLE.png" alt="Italian Corner Logo" id="logo" class="me-3">
+                <h1 class="my-0">Italian Corner - La Visione</h1>
+            </div>
+            <a href="index.html" class="btn btn-light mt-2">Torna alla Dashboard</a>
+        </div>
     </header>
+    <main class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <!-- SLIDE 1: LA VISIONE - L'ITALIAN LIFE STYLE -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-lg-5">
+                        <div class="text-center mb-4">
+                            <h6 class="text-success text-uppercase">La Nostra Visione</h6>
+                            <h2 class="display-5 fw-bold">Reinventare l'Italian Life Style</h2>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h3 class="fw-bold">Gusto e benessere, finalmente accessibili.</h3>
+                                <p class="lead">L'Italian Life Style è un equilibrio perfetto di piacere e salute, qualità e semplicità. Un ideale desiderato in tutto il mondo, ma quasi impossibile da integrare nella vita frenetica di oggi.</p>
+                                <p>La nostra missione è sbloccare questo stile di vita, rendendolo una scelta quotidiana, non un'eccezione del weekend. Con i nostri prodotti, puoi godere del vero gusto italiano, mantenendo un regime alimentare a basso contenuto di carboidrati e supportando uno stile di vita ketogenico, in linea con i principi dell'Italian Life Style.</p>
+                                <ul class="list-unstyled mt-4">
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Gusto & Piacere Autentico</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Benessere & Energia (Keto & Low Carb)</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Qualità & Semplicità</li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> Italian Life Style</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 mt-4 mt-lg-0">
+                                <img src="immagini/Design agent feedback (2).png" alt="Persona sorridente in un contesto urbano moderno" class="img-fluid rounded shadow">
+                            </div>
+                        </div>
+                        <div class="text-center bg-light p-3 mt-4 rounded">
+                            <p class="h5 fst-italic">"Crediamo che il cibo italiano di alta qualità non debba essere un lusso, ma una possibilità quotidiana."</p>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- SLIDE 1: LA VISIONE - L'ITALIAN LIFE STYLE -->
-    <div class="slide-container">
-        <div class="slide-header">
-            <div class="eyebrow">La Nostra Visione</div>
-            <h1>Reinventare l'Italian Life Style</h1>
-        </div>
-        <div class="slide-content">
-            <div class="text-column">
-                <h2>Gusto e benessere, finalmente accessibili.</h2>
-                <p>L'Italian Life Style è un equilibrio perfetto di piacere e salute, qualità e semplicità. Un ideale desiderato in tutto il mondo, ma quasi impossibile da integrare nella vita frenetica di oggi.</p>
-                <p>La nostra missione è sbloccare questo stile di vita, rendendolo una scelta quotidiana, non un'eccezione del weekend. Con i nostri prodotti, puoi godere del vero gusto italiano, mantenendo un regime alimentare a basso contenuto di carboidrati e supportando uno stile di vita ketogenico, in linea con i principi dell'Italian Life Style.</p>
-                <ul>
-                    <li>Gusto & Piacere Autentico</li>
-                    <li>Benessere & Energia (Keto & Low Carb)</li>
-                    <li>Qualità & Semplicità</li>
-                    <li>Italian Life Style</li>
-                </ul>
-            </div>
-            <div class="image-column">
-                <img src="immagini/Design agent feedback (2).png" alt="Persona sorridente in un contesto urbano moderno">
-            </div>
-        </div>
-        <div class="full-width-section">
-            <p>Crediamo che il cibo italiano di alta qualità non debba essere un lusso, ma una possibilità quotidiana.</p>
-        </div>
-    </div>
+                <!-- SLIDE 2: L'OSTACOLO - LA QUALITÀ MADE IN ITALY -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-lg-5">
+                        <div class="text-center mb-4">
+                            <h6 class="text-success text-uppercase">L'Opportunità di Mercato</h6>
+                            <h2 class="display-5 fw-bold">Il Paradosso del "Made in Italy"</h2>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h3 class="fw-bold">La Qualità che Amiamo, i Limiti che Odiamo.</h3>
+                                <p class="lead">Il cibo "Made in Italy" è sinonimo di eccellenza, ma la sua qualità è legata a un modello lento, rigido e incompatibile con le esigenze moderne.</p>
+                                <p>Richiede tempo, programmazione e spesso ci costringe a compromessi, rendendo difficile l'adozione di un vero Italian Life Style basato su benessere e alimentazione consapevole, come i prodotti ketogenici e a basso contenuto di carboidrati. Questo crea un enorme vuoto nel mercato: milioni di persone che desiderano mangiare bene ma non hanno il tempo per farlo.</p>
+                                <ul class="list-unstyled mt-4">
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i> Lento e Inconveniente</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i> Orari Rigidi e Inaccessibili</li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-x-circle-fill text-danger me-2"></i> Spreco Alimentare Elevato</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6 mt-4 mt-lg-0">
+                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop" alt="Chef che prepara pasta fresca in una cucina tradizionale" class="img-fluid rounded shadow">
+                            </div>
+                        </div>
+                        <div class="text-center bg-light p-3 mt-4 rounded">
+                            <p class="h5 fst-italic">"Oggi, i consumatori sono costretti a scegliere: qualità o convenienza. Non possono avere entrambi."</p>
+                        </div>
+                    </div>
+                </div>
 
-    <hr>
-
-    <!-- SLIDE 2: L'OSTACOLO - LA QUALITÀ MADE IN ITALY -->
-    <div class="slide-container">
-        <div class="slide-header">
-            <div class="eyebrow">L'Opportunità di Mercato</div>
-            <h1>Il Paradosso del "Made in Italy"</h1>
-        </div>
-        <div class="slide-content">
-            <div class="text-column">
-                <h2>La Qualità che Amiamo, i Limiti che Odiamo.</h2>
-                <p>Il cibo "Made in Italy" è sinonimo di eccellenza, ma la sua qualità è legata a un modello lento, rigido e incompatibile con le esigenze moderne. Richiede tempo, programmazione e spesso ci costringe a compromessi, rendendo difficile l'adozione di un vero Italian Life Style basato su benessere e alimentazione consapevole, come i prodotti ketogenici e a basso contenuto di carboidrati.</p>
-                <p>Questo crea un enorme vuoto nel mercato: milioni di persone che desiderano mangiare bene ma non hanno il tempo per farlo.</p>
-                <ul>
-                    <li>Lento e Inconveniente</li>
-                    <li>Orari Rigidi e Inaccessibili</li>
-                    <li>Spreco Alimentare Elevato</li>
-                </ul>
-            </div>
-            <div class="image-column">
-                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop" alt="Chef che prepara pasta fresca in una cucina tradizionale">
-            </div>
-        </div>
-        <div class="full-width-section">
-            <p>Oggi, i consumatori sono costretti a scegliere: qualità o convenienza. Non possono avere entrambi.</p>
-        </div>
-    </div>
-
-    <hr>
-
-    <!-- SLIDE 3: LA RIVOLUZIONE - LA TECNOLOGIA "NO COLD CHAIN" -->
-    <div class="slide-container">
-        <div class="slide-header">
-            <div class="eyebrow">La Nostra Rivoluzione</div>
-            <h1>Qualità senza Compromessi</h1>
-        </div>
-        <div class="slide-content">
-            <div class="text-column">
-                <h2>La Tecnologia che Libera la Qualità.</h2>
-                <p>Abbiamo eliminato il più grande ostacolo alla scalabilità del cibo di qualità: la catena del freddo. Grazie a una tecnologia innovativa di cottura e conservazione in autoclave, i nostri piatti mantengono il loro sapore e le loro proprietà nutrizionali per 12 mesi, a temperatura ambiente.</p>
-                <p>Questo non è un semplice miglioramento. È una rivoluzione che cambia le regole del gioco.</p>
-            </div>
-            <div class="infographic-column">
-                <h2>Il Vantaggio Competitivo</h2>
-                 <ul>
-                    <li>Logistica Semplificata, Costi Abbattuti</li>
-                    <li>Zero Sprechi Alimentari</li>
-                    <li>Scalabilità Globale Immediata</li>
-                    <li>Qualità Costante e Garantita</li>
-                    <li>Supporta l'Italian Life Style: Keto & Low Carb Friendly</li>
-                </ul>
+                <!-- SLIDE 3: LA RIVOLUZIONE - LA TECNOLOGIA "NO COLD CHAIN" -->
+                <div class="card shadow-sm">
+                    <div class="card-body p-lg-5">
+                        <div class="text-center mb-4">
+                            <h6 class="text-success text-uppercase">La Nostra Rivoluzione</h6>
+                            <h2 class="display-5 fw-bold">Qualità senza Compromessi</h2>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h3 class="fw-bold">La Tecnologia che Libera la Qualità.</h3>
+                                <p class="lead">Abbiamo eliminato il più grande ostacolo alla scalabilità del cibo di qualità: la catena del freddo.</p>
+                                <p>Grazie a una tecnologia innovativa di cottura e conservazione in autoclave, i nostri piatti mantengono il loro sapore e le loro proprietà nutrizionali per 12 mesi, a temperatura ambiente. Questo non è un semplice miglioramento. È una rivoluzione che cambia le regole del gioco.</p>
+                            </div>
+                            <div class="col-lg-6 mt-4 mt-lg-0">
+                                <h4 class="fw-bold">Il Vantaggio Competitivo</h4>
+                                <ul class="list-unstyled mt-3">
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-rocket-takeoff-fill text-success me-2"></i> Logistica Semplificata, Costi Abbattuti</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-trash-fill text-success me-2"></i> Zero Sprechi Alimentari</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-globe-americas text-success me-2"></i> Scalabilità Globale Immediata</li>
+                                    <li class="d-flex align-items-center mb-2"><i class="bi bi-patch-check-fill text-success me-2"></i> Qualità Costante e Garantita</li>
+                                    <li class="d-flex align-items-center"><i class="bi bi-heart-pulse-fill text-success me-2"></i> Supporta l'Italian Life Style: Keto & Low Carb Friendly</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="text-center bg-light p-3 mt-4 rounded">
+                            <p class="h5 fst-italic">"La nostra tecnologia sblocca il Santo Graal del food-tech: un prodotto di altissima qualità, infinitamente scalabile."</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-         <div class="full-width-section">
-            <p>La nostra tecnologia sblocca il Santo Graal del food-tech: un prodotto di altissima qualità, infinitamente scalabile.</p>
-        </div>
-    </div>
-
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
