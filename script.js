@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const ebitda_annuale_medio = pnl.rows['EBITDA'].slice(1).reduce((acc, cell) => acc + cell.value, 0) / 12;
 
-        const capex_fisso = 83695;
+        const capex_fisso = params.capex_allestimento + params.capex_attrezzature + params.capex_cassa + params.capex_arredi + params.capex_burocrazia + params.capex_marketing_lancio;
         const capitale_operativo = opex_totali_100 * params.mesi_opex_capitale;
         const investimento_totale_singolo_pdv = capex_fisso + capitale_operativo;
 
