@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Italian Corner Business Plan Generator** - A Python-based financial modeling toolkit for creating and analyzing business plans for an Italian food retail concept. The project generates comprehensive Excel workbooks with fully dynamic, formula-based financial models including P&L statements, cash flow projections, ROI analysis, and multi-store expansion scenarios.
+**Italian Corner Business Plan Generator** - A comprehensive financial modeling toolkit combining Python-based Excel generation with an interactive web dashboard for the Italian food retail concept. The project consists of:
+
+1. **Python Backend**: Generates comprehensive Excel workbooks with fully dynamic, formula-based financial models including P&L statements, cash flow projections, ROI analysis, and multi-store expansion scenarios.
+2. **Web Frontend**: Interactive HTML5 dashboard providing real-time business plan simulations with visual charts and instant parameter adjustments without requiring Excel.
 
 ## Core Architecture
 
@@ -41,41 +44,168 @@ The primary script that generates the complete Business Plan Excel workbook (`Bu
 - Displays store opening parameters, consolidated cash flows, individual store details, and multi-store KPIs
 - Helps debug and validate the complex multi-period, multi-entity cash flow model
 
+### Web Dashboard Interface
+
+The project includes a complete web-based interface that provides an interactive alternative to working directly with Excel files. This allows users to explore business scenarios in real-time through a browser.
+
+**`index.html` (302 lines)**: Main dashboard page
+- **Responsive Bootstrap 5.3.3 layout** with mobile-friendly design
+- **Two-column interface**:
+  - **Left Panel**: Interactive parameter controls organized in 5 accordion sections
+  - **Right Panel**: Dynamic results display with tables and charts
+- **Parameter Sections**:
+  1. **Volumi di Vendita**: Daily sales volumes (piatti store/delivery, beverages)
+  2. **Prezzi e Costi**: Unit prices (IVA included + net) and costs with automatic IVA calculation
+  3. **Costi Operativi (OPEX)**: Monthly operational costs (rent, staff, utilities, marketing, etc.)
+  4. **Parametri Generali**: Working days, delivery commissions, initial capital buffer
+  5. **CAPEX**: One-time investment costs (fit-out, equipment, POS system, furniture, marketing launch)
+- **Results Display**:
+  - Executive summary with key business metrics
+  - ROI analysis and payback period
+  - P&L Mensile table (12 months with ramp-up)
+  - Cash Flow 12 Mesi table and Chart.js visualization
+  - Cash Flow 24 Mesi Multi-Store table and chart
+  - Investment and ROI analysis for 5-store expansion
+- **Default Values**: Pre-populated with realistic business parameters matching `crea_bp.py` defaults
+- **External Dependencies**: Bootstrap 5.3.3, Bootstrap Icons 1.11.3, Chart.js (all via CDN with SRI integrity checks)
+
+**`script.js`**: Business logic and calculation engine
+- Implements the same financial calculations as `crea_bp.py` but in JavaScript
+- Real-time recalculation on parameter changes
+- Renders dynamic tables and Chart.js visualizations
+- Handles IVA (VAT) calculations and ramp-up coefficient application
+- Generates consolidated multi-store cash flow projections
+- **Cache-busting**: Loaded with version query string (`?v=1678886400`)
+
+**`style.css`**: Custom styling
+- Brand-specific color scheme (Italian green theme)
+- Responsive design enhancements beyond Bootstrap defaults
+- Chart container sizing and formatting
+- Print-friendly styles (if implemented)
+
+**`presentazione.html`**: Vision and business concept presentation
+- Accessible via "La Visione" button in main header
+- Provides business context, brand story, and strategic positioning
+- Complements the data-driven dashboard with narrative elements
+
+**`logo ITALIAN LIFE STYLE.png`**: Brand logo
+- Displayed in header of both `index.html` and likely `presentazione.html`
+- Provides visual brand identity
+
+**`favicon`**: External favicon reference
+- Linked from lifeitalian.style domain
+- Provides browser tab icon
+
+#### Web Dashboard Features
+
+1. **Progressive Disclosure**: Accordion interface minimizes cognitive load
+2. **Visual Feedback**: Read-only calculated fields, color-coded sections, Bootstrap Icons for each parameter type
+3. **Dual-Mode Pricing**: Users input IVA-inclusive prices; net prices auto-calculated
+4. **Interactive Charts**: Cash flow visualizations using Chart.js for trend analysis
+5. **No Installation Required**: Pure HTML/CSS/JS - works in any modern browser
+6. **Offline Capable**: All logic client-side (once loaded, no server needed)
+7. **Excel Parity**: Implements same ramp-up model and financial formulas as Python generator
+
+#### Integration with Excel Generator
+
+The web dashboard and Python generator are **parallel implementations** of the same financial model:
+
+- **Same default parameters**: Both use identical starting values
+- **Same ramp-up logic**: 30%/60%/100% coefficients applied identically
+- **Same calculations**: Revenue, COGS, OPEX, cash flow formulas match
+- **Different use cases**:
+  - **Python/Excel**: For detailed analysis, offline work, sharing formal reports, Excel power users
+  - **Web Dashboard**: For quick simulations, presentations, stakeholder demos, non-technical users
+
 ## Technology Stack
 
+### Python Backend
 - **Python 3.11+** (developed with 3.11.3)
 - **openpyxl**: Core library for Excel file manipulation
   - Creates workbooks with formulas (not just values)
   - Applies styling (fonts, fills, borders, alignments)
   - Supports both formula reading (`data_only=False`) and evaluated value reading (`data_only=True`)
 
+### Web Frontend
+- **HTML5**: Semantic markup with accessibility features
+- **CSS3**: Custom styling via `style.css`
+- **JavaScript (ES6+)**: Client-side business logic in `script.js`
+- **Bootstrap 5.3.3**: Responsive UI framework
+  - Grid system for responsive layout
+  - Accordion component for parameter organization
+  - Form controls and input groups
+  - Utility classes for spacing and styling
+- **Bootstrap Icons 1.11.3**: Icon library for visual enhancement
+- **Chart.js**: Interactive charting library for cash flow visualizations
+- **CDN Delivery**: All external libraries loaded via jsDelivr and Cloudflare CDNs with SRI integrity checks
+
 ## Common Commands
 
-### Generate the Business Plan
+### Python Backend Commands
+
+#### Generate the Business Plan
 ```bash
 python3 crea_bp.py
 ```
 Creates/overwrites `Business_Plan_Italian_Corner.xlsx` with a complete, formula-driven business plan model.
 
-### Analyze the Generated Business Plan
+#### Analyze the Generated Business Plan
 ```bash
 python3 analizza_excel.py
 ```
 Displays detailed information about all worksheets, parameters, and calculated metrics.
 
-### Analyze Financial Requirements
+#### Analyze Financial Requirements
 ```bash
 python3 analizza_fabbisogno.py
 ```
 Shows the actual capital needed for multi-store expansion, identifying the peak funding requirement and break-even point.
 
-### Verify Multi-Store Cash Flow
+#### Verify Multi-Store Cash Flow
 ```bash
 python3 verifica_cf24.py
 ```
 Validates the structure and sample values from the 24-month multi-store cash flow projection.
 
+### Web Dashboard Commands
+
+#### Open the Interactive Dashboard
+```bash
+# macOS
+open index.html
+
+# Linux
+xdg-open index.html
+
+# Windows
+start index.html
+
+# Or simply double-click index.html in your file manager
+```
+Opens the interactive web dashboard in your default browser. No server required - works entirely client-side.
+
+#### Serve via Local HTTP Server (Optional)
+```bash
+# Python 3
+python3 -m http.server 8000
+
+# Then open browser to: http://localhost:8000/
+```
+Useful for testing in a more production-like environment or accessing from multiple devices on the same network.
+
+#### View Business Vision Page
+Navigate to `presentazione.html` by clicking "La Visione" button in the dashboard header, or open directly:
+```bash
+# macOS
+open presentazione.html
+
+# Linux
+xdg-open presentazione.html
+```
+
 ## Development Workflow
+
+### Modifying the Python Excel Generator
 
 When modifying the business plan generator:
 
@@ -84,6 +214,39 @@ When modifying the business plan generator:
 3. **Regenerate**: Run `python3 crea_bp.py`
 4. **Validate**: Run `python3 analizza_excel.py` to verify structure
 5. **Test specific features**: Use `verifica_cf24.py` or `analizza_fabbisogno.py` as needed
+
+### Modifying the Web Dashboard
+
+When modifying the web interface:
+
+1. **Update HTML structure**: Edit `index.html` to add/modify parameter inputs or results sections
+2. **Adjust styling**: Modify `style.css` for visual changes (colors, spacing, responsive breakpoints)
+3. **Update business logic**: Edit `script.js` to:
+   - Add new calculation functions
+   - Modify existing formulas (ensure they match `crea_bp.py` logic)
+   - Update table/chart rendering
+   - Add event listeners for new inputs
+4. **Test in browser**: Open `index.html` and verify:
+   - All parameters update correctly
+   - Calculations match expected results
+   - Charts render properly
+   - Responsive layout works on mobile
+5. **Cross-check with Excel**: Ensure web calculations match Python-generated Excel output for same inputs
+
+### Keeping Python and Web in Sync
+
+When changing business logic that affects both systems:
+
+1. **Update Python first**: Modify `crea_bp.py` and test thoroughly
+2. **Update JavaScript**: Apply equivalent changes to `script.js`
+3. **Verify parity**: Run both systems with identical parameters and compare:
+   - P&L figures
+   - Cash flow projections
+   - ROI calculations
+   - Multi-store expansion metrics
+4. **Update defaults**: If changing default parameters, update both:
+   - `params_data` in `crea_bp.py`
+   - Input `value` attributes in `index.html`
 
 ## Key Implementation Details
 
