@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Analyse Achats 2024-2025 | Mela Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Reveal.js Theme & Core -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/night.min.css" id="theme">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Style Corporate - Haut de gamme */
+        :root {
+            --primary: #3498db; /* Bleu Mela */
+            --secondary: #2ecc71; /* Vert positif */
+            --danger: #e74c3c; /* Rouge négatif */
+            --bg-gradient: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body { font-family: 'Inter', sans-serif; }
+        .reveal { background: var(--bg-gradient); }
+        
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-transform: none;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        
+        .reveal h1 { background: -webkit-linear-gradient(45deg, #3498db, #2ecc71); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* KPI Cards */
+        .kpi-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .kpi-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: var(--card-border);
+            border-radius: 16px;
+            padding: 25px;
+            flex: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        .kpi-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        
+        .kpi-value { font-size: 2.2em; font-weight: 800; color: #fff; display: block; margin-bottom: 10px; }
+        .kpi-label { font-size: 0.7em; text-transform: uppercase; color: #bdc3c7; letter-spacing: 1px; }
+        .trend-down { color: var(--danger); font-size: 0.8em; }
+        .trend-up { color: var(--secondary); font-size: 0.8em; }
+
+        /* Table Styling */
+        table.custom-table {
+            font-size: 0.55em !important;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.custom-table th { border-bottom: 2px solid var(--primary); color: var(--primary); padding: 15px; }
+        table.custom-table td { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px; }
+        table.custom-table tr:hover { background-color: rgba(255,255,255,0.05); }
+
+        /* Footer */
+        .fixed-footer {
+            position: fixed;
+            bottom: 20px;
+            left: 30px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            z-index: 9999;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 500px;
+            width: 90%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="fixed-footer">MELA SERVICES | RAPPORT ACHATS 2025</div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Intro -->
+            <section>
+                <p style="font-size: 0.6em; letter-spacing: 3px; text-transform: uppercase; color: #3498db;">Rapport de Gestion</p>
+                <h1>Analyse des Achats</h1>
+                <h3>Comparatif 2024 - 2025</h3>
+                <div style="margin-top: 50px; font-size: 0.6em; opacity: 0.8;">
+                    <p>Présenté par : <strong>Paolo Guolo</strong></p>
+                    <p>PDG, Mela Services</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Synthèse (KPIs) -->
+            <section>
+                <h2>Synthèse Générale</h2>
+                <div class="kpi-container">
+                    <div class="kpi-card fragment fade-up">
+                        <span class="kpi-value">1,86 M€</span>
+                        <span class="kpi-label">Total 2024</span>
+                    </div>
+                    <div class="kpi-card fragment fade-up" data-fragment-index="1">
+                        <span class="kpi-value">1,57 M€</span>
+                        <span class="kpi-label">Total 2025 (YTD)</span>
+                    </div>
+                    <div class="kpi-card fragment fade-up" data-fragment-index="2">
+                        <span class="kpi-value trend-down"><i class="fas fa-arrow-down"></i> 15,5%</span>
+                        <span class="kpi-label">Variation Globale</span>
+                    </div>
+                </div>
+                <div style="margin-top: 40px; font-size: 0.7em; color: #95a5a6;" class="fragment">
+                    <i class="fas fa-info-circle"></i> <strong>Note :</strong> Rationalisation du panel fournisseurs (249 -> 233)
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Analyse par Famille (Tableau) -->
+            <section>
+                <h3>Détail par Famille d'Achat</h3>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Fournisseurs Clés (Ex.)</th>
+                            <th>Total 2024 (€)</th>
+                            <th>Total 2025 (€)</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Fournitures Ind. & MRO</td><td>Rubix, Tampleu</td><td>485 320</td><td>412 150</td><td class="trend-down">▼</td></tr>
+                        <tr><td>Électricité & Auto.</td><td>Rexel, Yesss</td><td>310 450</td><td>285 300</td><td class="trend-down">▼</td></tr>
+                        <tr><td>Matières 1ères (Acier)</td><td>IMS, Thyssen, Böhler</td><td>295 800</td><td>180 200</td><td class="trend-down">▼</td></tr>
+                        <tr><td>Services & Maintenance</td><td>Safrec, Socotec</td><td>180 200</td><td>195 500</td><td class="trend-up" style="color:#2ecc71">▲</td></tr>
+                        <tr><td>Hydraulique & Pneu.</td><td>Lechevalier, Sefi</td><td>145 600</td><td>130 100</td><td class="trend-down">▼</td></tr>
+                        <tr><td>Énergie & Utilités</td><td>CPO (Fioul), Eau</td><td>120 500</td><td>125 000</td><td class="trend-up" style="color:#2ecc71">▲</td></tr>
+                        <tr><td>Outillage</td><td>LOA, Satech</td><td>95 400</td><td>88 200</td><td class="trend-down">▼</td></tr>
+                        <tr><td>Sécurité & EPI</td><td>Fiprotec, Securimed</td><td>45 200</td><td>48 500</td><td class="trend-up" style="color:#2ecc71">▲</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SLIDE 4: Graphique Comparatif -->
+            <section>
+                <h3>Évolution des Dépenses (Top 5 Familles)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="familyChart"></canvas>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Focus Stratégique -->
+            <section>
+                <h2>Focus Stratégique</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+                    
+                    <div class="kpi-card fragment">
+                        <h4 style="color: var(--primary);"><i class="fas fa-search-dollar"></i> Matières Premières</h4>
+                        <p style="font-size: 0.6em;">Forte baisse constatée (-39%). Analyse nécessaire : baisse des cours de l'acier ou réduction des stocks de sécurité ?</p>
+                    </div>
+
+                    <div class="kpi-card fragment">
+                        <h4 style="color: var(--secondary);"><i class="fas fa-tools"></i> Maintenance</h4>
+                        <p style="font-size: 0.6em;">Légère hausse (+8%). Indicateur d'un vieillissement du parc machine ou d'une politique préventive accrue.</p>
+                    </div>
+
+                    <div class="kpi-card fragment">
+                        <h4 style="color: #f39c12;"><i class="fas fa-plug"></i> Électricité</h4>
+                        <p style="font-size: 0.6em;">Volume important réparti entre Rexel et Yesss. Opportunité de contrat cadre unique pour 2026.</p>
+                    </div>
+
+                    <div class="kpi-card fragment">
+                        <h4 style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> Tail Spend</h4>
+                        <p style="font-size: 0.6em;">Les achats "Autres/Non classés" ont été réduits drastiquement. Le contrôle des coûts indirects fonctionne.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Conclusion -->
+            <section>
+                <h2>Plan d'Action 2026</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li class="fragment fade-right" style="margin-bottom: 20px; display: flex; align-items: center;">
+                        <i class="fas fa-check-circle" style="color: var(--secondary); margin-right: 15px;"></i>
+                        <span><strong>Consolidation :</strong> Réduire le panel fournisseurs de 5% supplémentaires.</span>
+                    </li>
+                    <li class="fragment fade-right" style="margin-bottom: 20px; display: flex; align-items: center;">
+                        <i class="fas fa-file-contract" style="color: var(--primary); margin-right: 15px;"></i>
+                        <span><strong>Contrats Cadres :</strong> Négociation annuelle sur les familles "Électricité" et "EPI".</span>
+                    </li>
+                    <li class="fragment fade-right" style="margin-bottom: 20px; display: flex; align-items: center;">
+                        <i class="fas fa-digital-tachograph" style="color: #9b59b6; margin-right: 15px;"></i>
+                        <span><strong>Digitalisation :</strong> Automatisation des commandes récurrentes (C-Class).</span>
+                    </li>
+                </ul>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Init Reveal.js
+        Reveal.initialize({
+            hash: true,
+            transition: 'cubic', // none/fade/slide/convex/concave/zoom
+            backgroundTransition: 'zoom',
+            controls: true,
+            progress: true,
+        });
+
+        // Init Chart.js when slide is visible
+        Reveal.on('slidechanged', event => {
+            if (event.currentSlide.querySelector('#familyChart')) {
+                renderChart();
+            }
+        });
+
+        let chartInstance = null;
+
+        function renderChart() {
+            const ctx = document.getElementById('familyChart').getContext('2d');
+            
+            if(chartInstance) return; // Avoid re-rendering
+
+            const data2024 = [485, 310, 295, 180, 145];
+            const data2025 = [412, 285, 180, 195, 130];
+            const labels = ['Fournitures Ind.', 'Électricité', 'Matières 1ères', 'Maintenance', 'Hydraulique'];
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '2024 (k€)',
+                            data: data2024,
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            borderColor: '#3498db',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '2025 (k€)',
+                            data: data2025,
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                            borderColor: '#2ecc71',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeOutQuart'
+                    },
+                    plugins: {
+                        legend: { labels: { color: 'white' } }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: 'rgba(255,255,255,0.7)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        x: {
+                            ticks: { color: 'white' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Pre-render chart if first slide is chart (unlikely but safe)
+        if (document.querySelector('.present').querySelector('#familyChart')) {
+            renderChart();
+        }
+    </script>
+</body>
+</html>
