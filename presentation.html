@@ -20,6 +20,7 @@
             --primary: #3498db; /* Bleu Corporate */
             --secondary: #2ecc71; /* Vert positif */
             --danger: #e74c3c; /* Rouge négatif */
+            --warning: #f39c12; /* Orange attention */
             --bg-gradient: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
             --card-bg: rgba(255, 255, 255, 0.08);
             --card-border: 1px solid rgba(255, 255, 255, 0.1);
@@ -41,7 +42,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 40px;
+            margin-top: 30px;
         }
         
         .kpi-card {
@@ -60,6 +61,19 @@
         .kpi-label { font-size: 0.7em; text-transform: uppercase; color: #bdc3c7; letter-spacing: 1px; }
         .trend-down { color: var(--danger); font-size: 0.8em; }
         .trend-up { color: var(--secondary); font-size: 0.8em; }
+
+        /* Note Box */
+        .note-box {
+            margin-top: 30px;
+            font-size: 0.6em;
+            color: #ecf0f1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border-left: 4px solid var(--warning);
+            display: inline-block;
+            text-align: left;
+        }
 
         /* Table Styling */
         table.custom-table {
@@ -124,8 +138,15 @@
                         <span class="kpi-label">Variation Globale</span>
                     </div>
                 </div>
-                <div style="margin-top: 40px; font-size: 0.7em; color: #95a5a6;" class="fragment">
-                    <i class="fas fa-info-circle"></i> <strong>Note :</strong> Rationalisation du panel fournisseurs (249 -> 233)
+                
+                <!-- Note Périmètre Temps -->
+                <div class="note-box fragment fade-in" data-fragment-index="3">
+                    <p style="margin: 5px 0;">🕒 <strong>2024 :</strong> 12 mois &nbsp;&nbsp;|&nbsp;&nbsp; 🕒 <strong>2025 :</strong> 11 mois</p>
+                    <p style="margin: 5px 0; color: var(--warning); font-weight: 600;">➡️ Comparaison non à périmètre temps équivalent.</p>
+                </div>
+
+                <div style="margin-top: 20px; font-size: 0.6em; color: #95a5a6;" class="fragment">
+                    <i class="fas fa-info-circle"></i> <strong>Panel Fournisseurs :</strong> Rationalisation en cours (249 -> 233)
                 </div>
             </section>
 
@@ -204,7 +225,7 @@
                     </li>
                     <li class="fragment fade-right" style="margin-bottom: 20px; display: flex; align-items: center;">
                         <i class="fas fa-digital-tachograph" style="color: #9b59b6; margin-right: 15px;"></i>
-                        <span><strong>Digitalisation :</strong> Automatisation des commandes récurrentes (C-Class).</span>
+                        <span><strong>Digitalisation :</strong> Automatisation des commandes récurrentes (classification ABC).</span>
                     </li>
                 </ul>
             </section>
@@ -289,7 +310,7 @@
             });
         }
         
-        // Pre-render chart if first slide is chart (unlikely but safe)
+        // Pre-render chart if first slide is chart
         if (document.querySelector('.present').querySelector('#familyChart')) {
             renderChart();
         }
